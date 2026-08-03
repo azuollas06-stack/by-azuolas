@@ -48,7 +48,7 @@ export function IntroScreen({ onEnter }: { onEnter: () => void }) {
             animate={{ opacity: showButton ? 1 : 0, y: showButton ? 0 : 18 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             onClick={onEnter}
-            className="mx-auto mt-6 rounded-full border border-white/60 bg-white/10 px-6 py-3 text-sm font-medium uppercase tracking-[0.35em] text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20"
+            className="mx-auto mt-6 flex min-h-[48px] items-center rounded-full border border-white/60 bg-white/10 px-6 py-3.5 text-sm font-medium uppercase tracking-[0.35em] text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20 active:scale-[0.97] active:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:min-h-0 sm:py-3"
           >
             ĮEITI
           </motion.button>

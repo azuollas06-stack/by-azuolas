@@ -64,24 +64,50 @@ export default function Home() {
                 style={{ y: glowY }}
                 className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,_rgba(199,169,123,0.08),_transparent_45%)]"
               />
-              <motion.div className="mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-between px-6 py-16 lg:px-10 lg:py-20">
+              <motion.div className="mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-between px-6 py-10 sm:py-16 lg:px-10 lg:py-20">
                 <motion.div
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, ease: "easeOut" }}
-                  className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-6 text-[11px] uppercase tracking-[0.35em] text-white/50"
+                  className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-5 text-[10px] uppercase tracking-[0.18em] text-white/50 sm:pb-6 sm:text-[11px] sm:tracking-[0.35em]"
                 >
                   <span>BY.AZUOLAS</span>
                   <span>Digital direction / Shopify / Web</span>
                 </motion.div>
 
-                <div className="grid flex-1 items-center gap-10 py-10 lg:grid-cols-[1.15fr_0.85fr] lg:py-12">
-                  <ScrollFadeOut className="max-w-4xl space-y-8">
+                <div className="grid flex-1 items-center gap-8 py-8 sm:gap-10 sm:py-10 lg:grid-cols-[1.15fr_0.85fr] lg:py-12">
+                  <div className="relative order-first flex justify-center lg:order-none lg:justify-end lg:col-start-2 lg:row-start-1 lg:col-end-3">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
+                      style={{ y: portraitY, scale: portraitScale, opacity: portraitOpacity }}
+                      className="w-full max-w-[340px] overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.02] p-2.5 shadow-[0_30px_100px_-30px_rgba(0,0,0,0.9)] sm:max-w-[420px] sm:rounded-[2rem] sm:p-3"
+                    >
+                      <div className="relative overflow-hidden rounded-[1.25rem] sm:rounded-[1.4rem]">
+                        <Image
+                          src="/media/azuolas-sedi.png"
+                          alt="BY.AZUOLAS"
+                          width={1536}
+                          height={1024}
+                          priority
+                          sizes="(min-width: 640px) 420px, 340px"
+                          className="h-[380px] w-full object-cover object-[center_20%] sm:h-[440px] lg:h-[520px]"
+                        />
+                        <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgba(0,0,0,0.1)_0%,_rgba(0,0,0,0.35)_100%)]" />
+                        <div className="absolute left-5 top-5 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-white/80 backdrop-blur sm:left-6 sm:top-6 sm:tracking-[0.35em]">
+                          Ąžuolas
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  <ScrollFadeOut className="order-last max-w-4xl space-y-6 sm:space-y-8 lg:order-none lg:col-start-1 lg:row-start-1">
                     <motion.p
                       initial={{ opacity: 0, y: 18 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.65, delay: 0.1, ease: "easeOut" }}
-                      className="text-sm uppercase tracking-[0.35em] text-white/50"
+                      className="text-xs uppercase tracking-[0.25em] text-white/50 sm:text-sm sm:tracking-[0.35em]"
                     >
                       Premium digital experiences
                     </motion.p>
@@ -90,14 +116,14 @@ export default function Home() {
                       as="h1"
                       by="words"
                       text="Skaitmeninė patirtis, kuri lieka atmintyje."
-                      className="font-['var(--font-condensed)'] text-[clamp(3.4rem,8vw,8.5rem)] uppercase leading-[0.86] tracking-[0.005em] text-white"
+                      className="font-['var(--font-condensed)'] text-[clamp(2.5rem,11vw,3.2rem)] uppercase leading-[0.96] tracking-[0.005em] text-white sm:text-[clamp(3.4rem,8vw,8.5rem)] sm:leading-[0.86]"
                     />
 
                     <motion.p
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.65, delay: 0.45, ease: "easeOut" }}
-                      className="max-w-2xl text-lg leading-8 text-white/50"
+                      className="max-w-2xl text-base leading-7 text-white/50 sm:text-lg sm:leading-8"
                     >
                       Kuriu skaitmeninę patirtį, kuri atrodo ramiai, kalba aiškiai ir palieka ilgalaikį įspūdį.
                     </motion.p>
@@ -108,7 +134,7 @@ export default function Home() {
                       transition={{ duration: 0.65, delay: 0.55, ease: "easeOut" }}
                       className="flex flex-wrap items-center gap-5"
                     >
-                      <MagneticLink href="/contact" variant="solid">
+                      <MagneticLink href="/contact" variant="solid" className="min-h-[48px] sm:min-h-0">
                         Pasikalbėkime <ArrowRight className="h-4 w-4" />
                       </MagneticLink>
                       <span className="flex items-center gap-2 text-sm text-white/50">
@@ -117,38 +143,13 @@ export default function Home() {
                       </span>
                     </motion.div>
                   </ScrollFadeOut>
-
-                  <div className="relative flex justify-end lg:justify-start">
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.96 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
-                      style={{ y: portraitY, scale: portraitScale, opacity: portraitOpacity }}
-                      className="w-full max-w-[420px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-3 shadow-[0_30px_100px_-30px_rgba(0,0,0,0.9)]"
-                    >
-                      <div className="relative overflow-hidden rounded-[1.4rem]">
-                        <Image
-                          src="/media/azuolas-sedi.png"
-                          alt="BY.AZUOLAS"
-                          width={1200}
-                          height={1400}
-                          priority
-                          className="h-[440px] w-full object-cover sm:h-[520px]"
-                        />
-                        <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgba(0,0,0,0.1)_0%,_rgba(0,0,0,0.35)_100%)]" />
-                        <div className="absolute left-6 top-6 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-[10px] uppercase tracking-[0.35em] text-white/80 backdrop-blur">
-                          Ąžuolas
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
                 </div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
-                  className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-sm text-white/50"
+                  className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5 text-sm text-white/50 sm:pt-6"
                 >
                   <span>Slinkite žemyn.</span>
                   <span className="text-white/50">01 / 03</span>

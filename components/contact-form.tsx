@@ -18,7 +18,7 @@ const contactSchema = z.object({
 type ContactFormValues = z.infer<typeof contactSchema>;
 
 const inputClasses =
-  "w-full rounded-2xl border border-white/15 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus-visible:border-white focus-visible:ring-2 focus-visible:ring-white/40";
+  "w-full rounded-2xl border border-white/15 bg-white/[0.04] px-4 py-3.5 sm:py-3 text-base sm:text-sm text-white outline-none transition-colors placeholder:text-white/30 focus-visible:border-white focus-visible:ring-2 focus-visible:ring-white/40";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sent">("idle");
@@ -102,7 +102,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition-colors hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-6 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition-colors hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60 sm:min-h-0"
       >
         Siųsti žinutę <ArrowRight className="h-4 w-4" />
       </button>

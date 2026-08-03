@@ -123,7 +123,7 @@ export default function PortfolioPage() {
               as="h1"
               by="lines"
               text="Vienas realus projektas. Penki premium konceptai."
-              className="font-['var(--font-condensed)'] text-[clamp(2.6rem,6vw,5rem)] uppercase leading-[0.9] text-white"
+              className="font-['var(--font-condensed)'] text-[clamp(2rem,9vw,2.6rem)] uppercase leading-[1] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.9]"
             />
           </div>
           <p className="max-w-xl text-lg leading-8 text-white/50">
@@ -175,19 +175,19 @@ export default function PortfolioPage() {
           <div key={concept.title} className="w-full shrink-0 lg:w-[78vw]">
             <TiltCard
               intensity={2.5}
-              className={`relative overflow-hidden rounded-[2rem] border ${concept.palette.border} ${concept.palette.bg} px-8 py-14 sm:px-12 lg:flex lg:h-[62vh] lg:flex-col lg:justify-center lg:px-16 lg:py-0`}
+              className={`relative overflow-hidden rounded-[2rem] border ${concept.palette.border} ${concept.palette.bg} px-6 py-10 sm:px-12 sm:py-14 lg:flex lg:h-[62vh] lg:flex-col lg:justify-center lg:px-16 lg:py-0`}
             >
               <div
                 aria-hidden
                 className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-20 blur-3xl"
                 style={{ background: concept.palette.accent }}
               />
-              <div className="relative grid gap-8 lg:grid-cols-[auto_1fr_auto] lg:items-end">
-                <span className={`font-['var(--font-display)'] text-6xl leading-none ${concept.palette.subtext} opacity-60 lg:text-7xl`}>
+              <div className="relative grid gap-6 sm:gap-8 lg:grid-cols-[auto_1fr_auto] lg:items-end">
+                <span className={`font-['var(--font-display)'] text-4xl leading-none ${concept.palette.subtext} opacity-60 sm:text-6xl lg:text-7xl`}>
                   {concept.index}
                 </span>
 
-                <div className="max-w-2xl space-y-4">
+                <div className="max-w-2xl space-y-3 sm:space-y-4">
                   <div className="flex items-center gap-3">
                     <p className={`text-xs uppercase tracking-[0.35em] ${concept.palette.subtext}`}>{concept.category}</p>
                     <span
@@ -196,10 +196,10 @@ export default function PortfolioPage() {
                       Konceptas
                     </span>
                   </div>
-                  <h2 className={`font-['var(--font-display)'] text-4xl leading-[0.95] sm:text-5xl lg:text-6xl ${concept.palette.text}`}>
+                  <h2 className={`font-['var(--font-display)'] text-3xl leading-[0.95] sm:text-5xl lg:text-6xl ${concept.palette.text}`}>
                     {concept.title}
                   </h2>
-                  <p className={`max-w-lg text-base leading-8 ${concept.palette.subtext}`}>{concept.description}</p>
+                  <p className={`max-w-lg text-base leading-7 sm:leading-8 ${concept.palette.subtext}`}>{concept.description}</p>
                   <p className={`pt-1 text-xs uppercase tracking-[0.3em] ${concept.palette.subtext} opacity-80`}>{concept.detail}</p>
                 </div>
 

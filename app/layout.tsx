@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "lt_LT",
     siteName: "BY.AZUOLAS",
-    images: [{ url: "/media/azuolas-sedi.png", width: 1200, height: 1500 }],
+    images: [{ url: "/media/azuolas-sedi.png", width: 1536, height: 1024 }],
   },
   twitter: {
     card: "summary_large_image",

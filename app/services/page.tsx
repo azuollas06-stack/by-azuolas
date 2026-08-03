@@ -64,7 +64,7 @@ export default function ServicesPage() {
             as="h1"
             by="lines"
             text="Ne paslaugų sąrašas — skaitmeninio brando sistema."
-            className="font-['var(--font-condensed)'] text-[clamp(2.6rem,6vw,5rem)] uppercase leading-[0.92] text-white"
+            className="font-['var(--font-condensed)'] text-[clamp(1.75rem,8.5vw,2.3rem)] uppercase leading-[1.02] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.92]"
           />
           <p className="text-lg leading-8 text-white/50">
             Kiekviena paslauga sujungiama į vieną nuoseklią patirtį: nuo pirmo prisistatymo iki ilgalaikio augimo.

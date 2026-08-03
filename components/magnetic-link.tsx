@@ -30,17 +30,17 @@ export function MagneticLink({ href, children, className = "", variant = "ghost-
   }
 
   const base =
-    "group relative inline-flex items-center gap-2 text-sm font-medium tracking-wide transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
+    "group relative inline-flex items-center gap-2 text-sm font-medium tracking-wide transition-colors duration-300 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
 
   const variants: Record<string, string> = {
     solid:
-      "rounded-full bg-white px-6 py-3 text-black hover:bg-white/85 focus-visible:ring-white focus-visible:ring-offset-black",
+      "min-h-[48px] rounded-full bg-white px-6 py-3.5 text-black hover:bg-white/85 active:bg-white/75 focus-visible:ring-white focus-visible:ring-offset-black sm:min-h-0 sm:py-3",
     outline:
-      "rounded-full border border-white/30 px-6 py-3 text-white hover:border-white focus-visible:ring-white focus-visible:ring-offset-black",
+      "min-h-[48px] rounded-full border border-white/30 px-6 py-3.5 text-white hover:border-white active:border-white/70 focus-visible:ring-white focus-visible:ring-offset-black sm:min-h-0 sm:py-3",
     ghost:
-      "text-stone-900 underline decoration-stone-400 underline-offset-4 hover:decoration-stone-900 focus-visible:ring-stone-950 focus-visible:ring-offset-[#f5f1eb] rounded-sm",
+      "min-h-[48px] items-center text-stone-900 underline decoration-stone-400 underline-offset-4 hover:decoration-stone-900 active:decoration-stone-900 focus-visible:ring-stone-950 focus-visible:ring-offset-[#f5f1eb] rounded-sm sm:min-h-0",
     "ghost-dark":
-      "text-white underline decoration-white/40 underline-offset-4 hover:decoration-white focus-visible:ring-white focus-visible:ring-offset-black rounded-sm",
+      "min-h-[48px] items-center text-white underline decoration-white/40 underline-offset-4 hover:decoration-white active:decoration-white focus-visible:ring-white focus-visible:ring-offset-black rounded-sm sm:min-h-0",
   };
 
   return (

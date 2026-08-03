@@ -24,7 +24,7 @@ export function FaqIndex({ faqs }: { faqs: Faq[] }) {
                 onClick={() => setActive(index)}
                 aria-expanded={isActive}
                 aria-controls={panelId}
-                className="group relative flex w-full items-baseline gap-5 py-6 text-left focus-visible:outline-none"
+                className="group relative flex w-full items-baseline gap-5 rounded-sm py-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 <span
                   className={`font-['var(--font-display)'] text-xl transition-colors duration-300 sm:text-2xl ${
