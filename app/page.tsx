@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -27,8 +27,41 @@ const processSteps = [
 
 gsap.registerPlugin(ScrollTrigger);
 
+const INTRO_SEEN_KEY = "byazuolas:intro-seen";
+
+// Storage access throws in some privacy modes; the intro just replays there.
+function introAlreadySeen() {
+  try {
+    return sessionStorage.getItem(INTRO_SEEN_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markIntroSeen() {
+  try {
+    sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+  } catch {
+    // Non-fatal — the intro replays on the next navigation.
+  }
+}
+
+// Layout effect on the client so the skip lands before paint; plain effect on
+// the server to avoid React's "useLayoutEffect does nothing on the server".
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function Home() {
   const [hasEntered, setHasEntered] = useState(false);
+  const [skipIntro, setSkipIntro] = useState(false);
+
+  // The server always renders the intro so the markup hydrates cleanly; a
+  // returning visitor drops it here, before the browser paints a single frame.
+  useIsomorphicLayoutEffect(() => {
+    if (introAlreadySeen()) {
+      setSkipIntro(true);
+      setHasEntered(true);
+    }
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.overflow = hasEntered ? "" : "hidden";
@@ -44,9 +77,21 @@ export default function Home() {
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        {!hasEntered && <IntroScreen key="intro" onEnter={() => setHasEntered(true)} />}
-      </AnimatePresence>
+      {/* Dropping the whole AnimatePresence rather than just its child is
+          deliberate: a skipped intro must not play its exit fade on the way out. */}
+      {!skipIntro && (
+        <AnimatePresence mode="wait">
+          {!hasEntered && (
+            <IntroScreen
+              key="intro"
+              onEnter={() => {
+                markIntroSeen();
+                setHasEntered(true);
+              }}
+            />
+          )}
+        </AnimatePresence>
+      )}
 
       {/* Rendered from the first paint so crawlers and screen readers reach the
           content; `inert` keeps focus and assistive tech inside the intro until entry. */}
