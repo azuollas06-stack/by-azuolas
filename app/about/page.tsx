@@ -40,6 +40,7 @@ export default function AboutPage() {
                 alt="BY.AZUOLAS"
                 width={1536}
                 height={1024}
+                quality={90}
                 sizes="(min-width: 1024px) 500px, 100vw"
                 className="h-full w-full object-cover object-[center_20%]"
                 priority
@@ -58,6 +59,7 @@ export default function AboutPage() {
                 alt="BY.AZUOLAS dirba prie nešiojamo kompiuterio"
                 width={883}
                 height={1106}
+                quality={90}
                 sizes="(min-width: 1024px) 450px, 100vw"
                 className="h-[320px] w-full object-cover sm:h-[420px] lg:h-[520px]"
               />

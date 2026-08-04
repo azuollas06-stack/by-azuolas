@@ -71,6 +71,7 @@ export default function Home() {
                       src="/media/azuolas-sedi.png"
                       alt="BY.AZUOLAS"
                       fill
+                      quality={90}
                       sizes="(min-width: 640px) 320px, 45vw"
                       className="object-cover object-[center_18%]"
                     />
@@ -83,6 +84,7 @@ export default function Home() {
                       src="/media/azuolas-prie-stalo.png"
                       alt="BY.AZUOLAS dirba prie nešiojamo kompiuterio"
                       fill
+                      quality={90}
                       sizes="(min-width: 640px) 320px, 45vw"
                       className="object-cover"
                     />
