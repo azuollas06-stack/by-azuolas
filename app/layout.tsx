@@ -7,11 +7,11 @@ import { FilmGrain } from "@/components/film-grain";
 import { CursorGlow } from "@/components/cursor-glow";
 import { ScrollProgress } from "@/components/scroll-progress";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-display", weight: ["400", "500", "600", "700"] });
-const bebasNeue = Bebas_Neue({ subsets: ["latin"], variable: "--font-condensed", weight: "400" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-grid", weight: ["400", "500", "700"] });
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono-grid", weight: ["400", "500"] });
+const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
+const playfair = Playfair_Display({ subsets: ["latin", "latin-ext"], variable: "--font-display", weight: ["400", "500", "600", "700"] });
+const bebasNeue = Bebas_Neue({ subsets: ["latin", "latin-ext"], variable: "--font-condensed", weight: "400" });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin", "latin-ext"], variable: "--font-grid", weight: ["400", "500", "700"] });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono-grid", weight: ["400", "500"] });
 
 const title = "BY.AZUOLAS | Premium skaitmeninis dizainas verslui";
 const description =
