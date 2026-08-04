@@ -36,7 +36,7 @@ export function PinnedSteps({ steps }: { steps: Step[] }) {
 
   return (
     <div ref={containerRef} className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-      <div className="lg:sticky lg:top-28 lg:h-fit">
+      <div className="hidden lg:sticky lg:top-28 lg:block lg:h-fit">
         <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-10">
           <AnimatePresence mode="wait">
             <motion.div
@@ -74,7 +74,7 @@ export function PinnedSteps({ steps }: { steps: Step[] }) {
             ref={(el) => {
               stepRefs.current[index] = el;
             }}
-            className="flex min-h-[45vh] flex-col justify-center border-t border-white/10 py-10 first:border-t-0 lg:min-h-[60vh]"
+            className="flex flex-col justify-center border-t border-white/10 py-10 first:border-t-0 lg:min-h-[60vh]"
           >
             <span className={`text-sm uppercase tracking-[0.3em] transition-colors duration-500 ${index === activeIndex ? "text-[#c7a97b]" : "text-white/50"}`}>
               {String(index + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
