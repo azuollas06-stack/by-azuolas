@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { SiteShell } from "@/components/site-shell";
 import { IntroScreen } from "@/components/intro-screen";
+import { Hero } from "@/components/hero";
 import { MagneticLink } from "@/components/magnetic-link";
 import { RevealSection } from "@/components/reveal-section";
 import { SplitReveal } from "@/components/split-reveal";
@@ -14,12 +15,12 @@ import { MaskReveal } from "@/components/mask-reveal";
 import { PinnedSteps } from "@/components/pinned-steps";
 
 const processSteps = [
-  { title: "Tyrimas", description: "Suprantu jūsų tikslus, auditoriją ir verslo kontekstą." },
-  { title: "Strategija", description: "Sukuriu aiškią komunikacijos ir dizaino kryptį." },
-  { title: "Dizainas", description: "Formuoju vizualinį ir patirties modelį su dėmesiu detalėms." },
-  { title: "Kūrimas", description: "Įgyvendinu projektą moderniu, aukštos kokybės tech sprendimu." },
-  { title: "Testavimas", description: "Tikriname, ar projektas veikia intuityviai ir efektyviai." },
-  { title: "Paleidimas ir palaikymas", description: "Padedu projektą paleisti ir toliau prižiūrėti jo kokybę." },
+  { title: "Tyrimas", description: "Peržiūriu jūsų verslą, konkurentus ir tai, kaip šiuo metu parduodate." },
+  { title: "Strategija", description: "Nusprendžiame, kokios parduotuvės ar svetainės jums iš tikrųjų reikia." },
+  { title: "Dizainas", description: "Piešiu kiekvieną ekraną taip, kad jis vestų prie pirkimo, ne tik atrodytų gražiai." },
+  { title: "Kūrimas", description: "Sukuriu Shopify parduotuvę arba svetainę, kuri veikia greitai ir be klaidų." },
+  { title: "Testavimas", description: "Tikrinu krepšelį, apmokėjimą ir greitį telefone — ten dažniausiai prarandami pirkėjai." },
+  { title: "Paleidimas ir palaikymas", description: "Paleidžiame kartu, ir lieku šalia, kai reikia ką nors pakoreguoti." },
 ];
 
 export default function Home() {
@@ -30,43 +31,20 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {!hasEntered && <IntroScreen key="intro" onEnter={() => setHasEntered(true)} />}
       </AnimatePresence>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: hasEntered ? 1 : 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: hasEntered ? 1 : 0 }} transition={{ duration: 0.7, delay: hasEntered ? 0.15 : 0, ease: "easeOut" }}>
         {!hasEntered ? null : (
           <SiteShell>
-            <section className="relative flex min-h-[calc(100dvh-81px)] flex-col items-center justify-center overflow-hidden bg-black px-6 py-24 text-center sm:px-10 md:min-h-[calc(100dvh-61px)]">
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_28%,_rgba(199,169,123,0.09),_transparent_55%)]"
-              />
-
-              <p className="relative text-[11px] uppercase tracking-[0.35em] text-white/40 sm:text-xs">Premium digital studio</p>
-
-              <h1 className="relative mt-6 font-condensed uppercase leading-[0.88] text-white sm:mt-8">
-                <span className="block text-[clamp(2.75rem,13vw,4.25rem)] sm:text-7xl lg:text-8xl">Mažiau.</span>
-                <span className="block text-[clamp(2.75rem,13vw,4.25rem)] text-[#c7a97b] sm:text-7xl lg:text-8xl">Bet geriau.</span>
-              </h1>
-
-              <p className="relative mt-7 max-w-xs text-base leading-7 text-white/50 sm:mt-9 sm:max-w-sm sm:text-lg sm:leading-8">
-                Premium skaitmeninis dizainas verslams, kurie nenori dar vieno šablono.
-              </p>
-
-              <MagneticLink href="/contact" variant="solid" className="relative mt-9 min-h-[52px] sm:mt-11 sm:min-h-0">
-                Pasikalbėkime <ArrowRight className="h-4 w-4" />
-              </MagneticLink>
-
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-8 flex flex-col items-center gap-2 text-white/30"
-              >
-                <span className="text-[10px] uppercase tracking-[0.3em]">Slinkite žemyn</span>
-                <ArrowDown className="h-4 w-4" />
-              </motion.div>
-            </section>
+            <Hero />
 
             <div className="flex items-center gap-5 border-y border-white/10 bg-black px-6 py-7 sm:px-10 sm:py-9">
               <span className="font-condensed text-3xl text-white/15 sm:text-4xl">02</span>
-              <div className="h-px flex-1 bg-white/10" />
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, amount: 0.8 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                className="h-px flex-1 origin-left bg-white/10"
+              />
               <SplitReveal
                 as="span"
                 by="chars"
@@ -80,11 +58,11 @@ export default function Home() {
                 <SplitReveal
                   as="h2"
                   by="lines"
-                  text="Kuriu tai, kas atrodo ir jaučiasi premium."
+                  text="Kuriu Shopify parduotuves, kurios parduoda."
                   className="font-display text-3xl italic leading-[1.15] text-white sm:text-5xl sm:leading-[1.08] lg:text-6xl"
                 />
                 <p className="mt-6 max-w-xl text-base leading-7 text-white/50 sm:mt-8 sm:text-lg sm:leading-8">
-                  Aš padedu verslams sukurti skaitmeninį brandą, kuris atrodo patikimai, kalba aiškiai ir užfiksuoja dėmesį. Ne tik svetainių kūrimas — tai galimybė padaryti jūsų verslą matomą, vertinamą ir lengviau pasirenkamą.
+                  Daugiausia dirbu su Shopify parduotuvėmis — nuo pirmo eskizo iki paleidimo. Kuriu ir prekės ženklo identitetą bei pilną svetainės atnaujinimą, kai verslui reikia daugiau nei naujo puslapio.
                 </p>
 
                 <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-6">
@@ -124,7 +102,13 @@ export default function Home() {
 
             <div className="flex items-center gap-5 border-y border-white/10 bg-black px-6 py-7 sm:px-10 sm:py-9">
               <span className="font-condensed text-3xl text-white/15 sm:text-4xl">03</span>
-              <div className="h-px flex-1 bg-white/10" />
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, amount: 0.8 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                className="h-px flex-1 origin-left bg-white/10"
+              />
               <SplitReveal
                 as="span"
                 by="chars"
@@ -138,7 +122,7 @@ export default function Home() {
                 <SplitReveal
                   as="h2"
                   by="words"
-                  text="Kiekvienas žingsnis yra apgalvotas ir nuoseklus."
+                  text="Šeši žingsniai nuo pirmo pokalbio iki paleidimo."
                   className="font-condensed text-[clamp(2rem,9vw,2.6rem)] uppercase leading-[1] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.92]"
                 />
                 <div className="mt-10 sm:mt-14">

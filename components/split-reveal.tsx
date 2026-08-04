@@ -13,9 +13,10 @@ type SplitRevealProps = {
   as?: "h1" | "h2" | "h3" | "p" | "span";
   className?: string;
   by?: "words" | "lines" | "chars";
+  delay?: number;
 };
 
-export function SplitReveal({ text, as = "h2", className = "", by = "words" }: SplitRevealProps) {
+export function SplitReveal({ text, as = "h2", className = "", by = "words", delay = 0 }: SplitRevealProps) {
   const ref = useRef<HTMLHeadingElement | HTMLParagraphElement | HTMLSpanElement | null>(null);
 
   useGSAP(
@@ -42,6 +43,7 @@ export function SplitReveal({ text, as = "h2", className = "", by = "words" }: S
         duration: by === "chars" ? 0.5 : 0.9,
         ease: by === "chars" ? "power2.out" : "power4.out",
         stagger: by === "words" ? 0.035 : by === "lines" ? 0.09 : 0.02,
+        delay,
       };
 
       if (alreadyVisible) {
@@ -55,7 +57,7 @@ export function SplitReveal({ text, as = "h2", className = "", by = "words" }: S
 
       return () => split.revert();
     },
-    { scope: ref, dependencies: [text, by] },
+    { scope: ref, dependencies: [text, by, delay] },
   );
 
   const Tag = as;
