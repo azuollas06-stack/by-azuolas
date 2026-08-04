@@ -120,7 +120,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                     <Link
                       href={item.href}
                       onClick={() => setMenuOpen(false)}
-                      className={`flex items-center justify-between border-b border-white/10 py-4 font-['var(--font-condensed)'] text-4xl uppercase leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                      className={`flex items-center justify-between border-b border-white/10 py-4 font-condensed text-4xl uppercase leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                         isActive ? "text-[#c7a97b]" : "text-white"
                       }`}
                     >

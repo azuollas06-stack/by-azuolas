@@ -40,7 +40,7 @@ export function IntroScreen({ onEnter }: { onEnter: () => void }) {
             as="span"
             by="chars"
             text="BY.AZUOLAS"
-            className="block font-['var(--font-condensed)'] text-[clamp(2.5rem,7vw,4.75rem)] uppercase tracking-[0.35em] text-white"
+            className="block font-condensed text-[clamp(2.5rem,7vw,4.75rem)] uppercase tracking-[0.35em] text-white"
           />
 
           <motion.button

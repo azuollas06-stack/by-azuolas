@@ -28,7 +28,7 @@ export default function ProcessPage() {
             as="h1"
             by="words"
             text="Kiekvienas žingsnis yra apgalvotas ir nuoseklus."
-            className="font-['var(--font-condensed)'] text-[clamp(2rem,9vw,2.6rem)] uppercase leading-[1] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.92]"
+            className="font-condensed text-[clamp(2rem,9vw,2.6rem)] uppercase leading-[1] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.92]"
           />
           <p className="text-lg leading-8 text-white/50">
             Dirbu taip, kad procesas jaustųsi aiškus, profesionalus ir ramus — nuo pirmos idėjos iki paleidimo. Slinkite žemyn.

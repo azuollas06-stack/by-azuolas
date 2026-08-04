@@ -46,7 +46,7 @@ export default function FaqPage() {
             as="h1"
             by="words"
             text="Dažniausiai užduodami klausimai."
-            className="font-['var(--font-condensed)'] text-[clamp(2.6rem,6vw,5rem)] uppercase leading-[0.92] text-white"
+            className="font-condensed text-[clamp(2.6rem,6vw,5rem)] uppercase leading-[0.92] text-white"
           />
           <p className="text-lg leading-8 text-white/50">
             Čia surinkti klausimai, kuriuos dažniausiai užduoda tie, kurie svarsto bendradarbiavimą.

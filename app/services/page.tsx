@@ -64,7 +64,7 @@ export default function ServicesPage() {
             as="h1"
             by="lines"
             text="Ne paslaugų sąrašas — skaitmeninio brando sistema."
-            className="font-['var(--font-condensed)'] text-[clamp(1.75rem,8.5vw,2.3rem)] uppercase leading-[1.02] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.92]"
+            className="font-condensed text-[clamp(1.75rem,8.5vw,2.3rem)] uppercase leading-[1.02] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.92]"
           />
           <p className="text-lg leading-8 text-white/50">
             Kiekviena paslauga sujungiama į vieną nuoseklią patirtį: nuo pirmo prisistatymo iki ilgalaikio augimo.
@@ -76,7 +76,7 @@ export default function ServicesPage() {
             <RevealSection key={service.title} delay={i * 0.04}>
               <div className="group relative grid gap-4 border-b border-white/10 py-8 transition-colors sm:grid-cols-[80px_1fr] sm:gap-8 lg:grid-cols-[100px_1.1fr_1fr] lg:items-start lg:py-10">
                 <div className="pointer-events-none absolute inset-0 -z-10 origin-left scale-x-0 bg-white/[0.03] transition-transform duration-500 ease-out group-hover:scale-x-100" />
-                <span className="font-['var(--font-display)'] text-2xl text-white/25 transition-colors group-hover:text-[#c7a97b] lg:text-3xl">
+                <span className="font-display text-2xl text-white/25 transition-colors group-hover:text-[#c7a97b] lg:text-3xl">
                   {service.index}
                 </span>
                 <div>

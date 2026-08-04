@@ -45,7 +45,7 @@ export function PinnedSteps({ steps }: { steps: Step[] }) {
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span className="font-['var(--font-condensed)'] text-[7rem] leading-none text-white/15">
+              <span className="font-condensed text-[7rem] leading-none text-white/15">
                 {String(activeIndex + 1).padStart(2, "0")}
               </span>
               <h3 className="mt-4 text-2xl font-semibold text-white">{steps[activeIndex].title}</h3>

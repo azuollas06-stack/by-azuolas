@@ -23,7 +23,7 @@ export default function AboutPage() {
               as="h1"
               by="words"
               text="Kuriu tai, kas atrodo ir jaučiasi premium."
-              className="font-['var(--font-condensed)'] text-[clamp(2.6rem,6vw,5.2rem)] uppercase leading-[0.92] text-white"
+              className="font-condensed text-[clamp(2.6rem,6vw,5.2rem)] uppercase leading-[0.92] text-white"
             />
             <p className="max-w-2xl text-lg leading-8 text-white/50">
               Aš padedu verslams sukurti skaitmeninį brandą, kuris atrodo patikimai, kalba aiškiai ir užfiksuoja dėmesį.
@@ -72,7 +72,7 @@ export default function AboutPage() {
                   as="p"
                   by="lines"
                   text="Jei reikia dirbti iki 6 ryto, kad galėčiau didžiuotis rezultatu — aš tai padarysiu."
-                  className="font-['var(--font-display)'] text-2xl italic leading-tight text-white sm:text-3xl"
+                  className="font-display text-2xl italic leading-tight text-white sm:text-3xl"
                 />
               </blockquote>
             </RevealSection>

@@ -22,7 +22,7 @@ export default function ContactPage() {
               as="h1"
               by="lines"
               text="Kurkime kažką, kuo didžiuositės."
-              className="font-['var(--font-condensed)'] text-[clamp(2.6rem,6vw,5rem)] uppercase leading-[0.9] text-white"
+              className="font-condensed text-[clamp(2.6rem,6vw,5rem)] uppercase leading-[0.9] text-white"
             />
             <p className="max-w-md text-lg leading-8 text-white/50">
               Jei turite idėją, verslo problemą ar norite stipresnio skaitmeninio prekės ženklo — parašykite. Atsakau asmeniškai.

@@ -27,7 +27,7 @@ export function FaqIndex({ faqs }: { faqs: Faq[] }) {
                 className="group relative flex w-full items-baseline gap-5 rounded-sm py-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 <span
-                  className={`font-['var(--font-display)'] text-xl transition-colors duration-300 sm:text-2xl ${
+                  className={`font-display text-xl transition-colors duration-300 sm:text-2xl ${
                     isActive ? "text-[#c7a97b]" : "text-white/25"
                   }`}
                 >
@@ -80,7 +80,7 @@ export function FaqIndex({ faqs }: { faqs: Faq[] }) {
               exit={{ opacity: 0, y: -18 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span className="font-['var(--font-condensed)'] text-7xl leading-none text-white/10">
+              <span className="font-condensed text-7xl leading-none text-white/10">
                 {String(active + 1).padStart(2, "0")}
               </span>
               <p className="mt-6 max-w-md text-lg leading-8 text-white/70">{faqs[active].answer}</p>
