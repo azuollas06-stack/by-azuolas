@@ -33,7 +33,7 @@ export default function Home() {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: hasEntered ? 1 : 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
         {!hasEntered ? null : (
           <SiteShell>
-            <section className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-black px-6 py-24 text-center sm:px-10">
+            <section className="relative flex min-h-[calc(100dvh-81px)] flex-col items-center justify-center overflow-hidden bg-black px-6 py-24 text-center sm:px-10 md:min-h-[calc(100dvh-61px)]">
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_28%,_rgba(199,169,123,0.09),_transparent_55%)]"

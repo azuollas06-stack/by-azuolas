@@ -1,40 +1,41 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+gsap.registerPlugin(ScrollTrigger);
+
 type Step = { title: string; description: string };
 
 export function PinnedSteps({ steps }: { steps: Step[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
+  useGSAP(
+    () => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
 
-    gsap.registerPlugin(ScrollTrigger);
-
-    const triggers = stepRefs.current.map((el, index) => {
-      if (!el) return null;
-      return ScrollTrigger.create({
-        trigger: el,
-        start: "top center",
-        end: "bottom center",
-        onEnter: () => setActiveIndex(index),
-        onEnterBack: () => setActiveIndex(index),
+      stepRefs.current.forEach((el, index) => {
+        if (!el) return;
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => setActiveIndex(index),
+          onEnterBack: () => setActiveIndex(index),
+        });
       });
-    });
-
-    return () => {
-      triggers.forEach((trigger) => trigger?.kill());
-    };
-  }, [steps.length]);
+    },
+    { scope: containerRef, dependencies: [steps.length] },
+  );
 
   return (
-    <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+    <div ref={containerRef} className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
       <div className="lg:sticky lg:top-28 lg:h-fit">
         <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-10">
           <AnimatePresence mode="wait">

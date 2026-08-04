@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function HorizontalScrollGallery({
   children,
@@ -14,18 +17,16 @@ export function HorizontalScrollGallery({
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    const track = trackRef.current;
-    if (!container || !track) return;
+  useGSAP(
+    () => {
+      const container = containerRef.current;
+      const track = trackRef.current;
+      if (!container || !track) return;
 
-    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!isDesktop || prefersReducedMotion) return;
+      const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!isDesktop || prefersReducedMotion) return;
 
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
       const scrollLength = track.scrollWidth - window.innerWidth;
       if (scrollLength <= 0) return;
 
@@ -41,10 +42,9 @@ export function HorizontalScrollGallery({
           invalidateOnRefresh: true,
         },
       });
-    }, container);
-
-    return () => ctx.revert();
-  }, []);
+    },
+    { scope: containerRef },
+  );
 
   return (
     <div ref={containerRef} className={`lg:overflow-hidden ${className}`}>
