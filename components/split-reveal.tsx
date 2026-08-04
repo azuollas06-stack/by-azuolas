@@ -16,6 +16,10 @@ type SplitRevealProps = {
   delay?: number;
   /** Hold the text in its pre-reveal state until this flips true. */
   enabled?: boolean;
+  /** Override the per-split default, so a section can set its own pace. */
+  duration?: number;
+  /** Override the per-split default gap between pieces. */
+  stagger?: number;
 };
 
 export function SplitReveal({
@@ -25,6 +29,8 @@ export function SplitReveal({
   by = "words",
   delay = 0,
   enabled = true,
+  duration,
+  stagger,
 }: SplitRevealProps) {
   const ref = useRef<HTMLHeadingElement | HTMLParagraphElement | HTMLSpanElement | null>(null);
 
@@ -52,9 +58,9 @@ export function SplitReveal({
       const animation = {
         yPercent: 0,
         opacity: 1,
-        duration: by === "chars" ? 0.5 : 0.9,
+        duration: duration ?? (by === "chars" ? 0.5 : 0.9),
         ease: by === "chars" ? "power2.out" : "power4.out",
-        stagger: by === "words" ? 0.035 : by === "lines" ? 0.09 : 0.02,
+        stagger: stagger ?? (by === "words" ? 0.035 : by === "lines" ? 0.09 : 0.02),
         delay,
       };
 
@@ -69,7 +75,7 @@ export function SplitReveal({
 
       return () => split.revert();
     },
-    { scope: ref, dependencies: [text, by, delay, enabled] },
+    { scope: ref, dependencies: [text, by, delay, enabled, duration, stagger] },
   );
 
   const Tag = as;

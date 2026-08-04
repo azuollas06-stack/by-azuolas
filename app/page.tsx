@@ -156,10 +156,14 @@ export default function Home() {
 
           <section className="bg-black px-6 py-16 sm:px-10 sm:py-24 lg:py-28">
             <div className="mx-auto max-w-5xl">
+              {/* Calmer than the Hero on purpose: longer line duration and a
+                  wider gap between them, so this reads as a held breath. */}
               <SplitReveal
                 as="h2"
                 by="lines"
                 text="Kuriu Shopify parduotuves, kurios parduoda."
+                duration={1.1}
+                stagger={0.14}
                 className="font-display text-3xl italic leading-[1.15] text-white sm:text-5xl sm:leading-[1.08] lg:text-6xl"
               />
               <p className="mt-6 max-w-xl text-base leading-7 text-white/50 sm:mt-8 sm:text-lg sm:leading-8">
@@ -167,7 +171,15 @@ export default function Home() {
               </p>
 
               <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-6">
-                <MaskReveal className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10" panelColor="#0a0a0a">
+                {/* Mirrored origins so the pair parts outward from the gutter
+                    like a curtain, and opposite drift so they breathe against
+                    each other instead of moving as one block. */}
+                <MaskReveal
+                  className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10"
+                  panelColor="#0a0a0a"
+                  origin="left"
+                  drift={12}
+                >
                   <Image
                     src="/media/azuolas-sedi.png"
                     alt="BY.AZUOLAS"
@@ -180,6 +192,9 @@ export default function Home() {
                 <MaskReveal
                   className="relative mt-6 aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 sm:mt-10"
                   panelColor="#c7a97b"
+                  delay={0.15}
+                  origin="right"
+                  drift={-12}
                 >
                   <Image
                     src="/media/azuolas-prie-stalo.png"
@@ -192,11 +207,23 @@ export default function Home() {
                 </MaskReveal>
               </div>
 
-              <blockquote className="mt-10 border-l-2 border-[#c7a97b] pl-5 sm:mt-14 sm:pl-6">
+              {/* The rule draws down as the line settles — the emotional beat of
+                  the page, so it gets the slowest pace in the section. */}
+              <blockquote className="relative mt-14 pl-5 sm:mt-20 sm:pl-6">
+                <motion.span
+                  aria-hidden
+                  initial={{ scaleY: 0 }}
+                  whileInView={{ scaleY: 1 }}
+                  viewport={{ once: true, amount: 0.6 }}
+                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute left-0 top-0 h-full w-0.5 origin-top bg-[#c7a97b]"
+                />
                 <SplitReveal
                   as="p"
                   by="lines"
                   text="Jei reikia dirbti iki 6 ryto, kad galėčiau didžiuotis rezultatu — aš tai padarysiu."
+                  duration={1.2}
+                  stagger={0.16}
                   className="font-display text-xl italic leading-tight text-white sm:text-2xl"
                 />
               </blockquote>
