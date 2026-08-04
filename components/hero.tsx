@@ -12,7 +12,7 @@ import { SplitReveal } from "@/components/split-reveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function Hero() {
+export function Hero({ active = true }: { active?: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const cueRef = useRef<HTMLButtonElement>(null);
@@ -97,6 +97,7 @@ export function Hero() {
           as="p"
           by="lines"
           text="Shopify parduotuvės"
+          enabled={active}
           delay={0.1}
           className="text-[11px] uppercase tracking-[0.35em] text-white/40 sm:text-xs"
         />
@@ -106,6 +107,7 @@ export function Hero() {
             as="span"
             by="chars"
             text="Mažiau."
+            enabled={active}
             delay={0.24}
             className="block text-[clamp(2.75rem,13vw,4.25rem)] sm:text-7xl lg:text-8xl xl:text-[7rem]"
           />
@@ -113,6 +115,7 @@ export function Hero() {
             as="span"
             by="chars"
             text="Bet geriau."
+            enabled={active}
             delay={0.36}
             className="block text-[clamp(2.75rem,13vw,4.25rem)] text-[#c7a97b] sm:text-7xl lg:text-8xl xl:text-[7rem]"
           />
@@ -122,13 +125,14 @@ export function Hero() {
           as="p"
           by="lines"
           text="Shopify parduotuvės ir svetainės, kurios parduoda — ne tik gražiai atrodo."
+          enabled={active}
           delay={0.58}
           className="mt-6 max-w-xs text-base leading-7 text-white/50 sm:mt-8 sm:max-w-sm sm:text-lg sm:leading-8"
         />
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.7, delay: 0.78, ease: [0.22, 1, 0.36, 1] }}
         >
           <MagneticLink
@@ -146,7 +150,7 @@ export function Hero() {
         type="button"
         onClick={handleScrollCue}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: active ? 1 : 0 }}
         transition={{ duration: 0.6, delay: 1.05 }}
         className="group absolute bottom-8 flex flex-col items-center gap-2 text-white/30 transition-colors duration-300 hover:text-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         aria-label="Slinkti į kitą skiltį"
