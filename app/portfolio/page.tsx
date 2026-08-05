@@ -113,17 +113,30 @@ const projects = [
     name: "Petora",
     url: "https://petora.lt",
     domain: "petora.lt",
-    description:
-      "El. parduotuvė augintinių prekėms. Prekių puslapiai, krepšelis, apmokėjimas, nuolaidų kodai ir atsiliepimai — viskas veikia kasdien.",
+    description: "El. parduotuvė augintinių prekėms — nuo tuščio lapo iki veikiančio verslo.",
+    scope: [
+      "Shopify parduotuvė nuo nulio",
+      "Logotipas ir prekės ženklo stilius",
+      "Prekių puslapiai, krepšelis, apmokėjimas",
+      "Teisiniai puslapiai — privatumas, taisyklės, grąžinimai",
+      "Domenas ir el. paštas",
+      "Nuolaidų kodai ir atsiliepimų sistema",
+    ],
   },
   {
     index: "02",
-    category: "Svetainė",
+    category: "Svetainės atnaujinimas",
     name: "Pas Smiltė",
     url: "https://passmilte.lt",
     domain: "passmilte.lt",
-    description:
-      "Svečių namų Palangoje svetainė. Septyni kambariai, aiškios kainos ir skambutis rezervacijai vienu paspaudimu.",
+    description: "Sena svetainė pakeista į greitą, aiškią ir telefonui pritaikytą.",
+    scope: [
+      "Visiškas senos svetainės atnaujinimas",
+      "Septynių kambarių puslapiai su kainomis",
+      "Skambutis rezervacijai vienu paspaudimu",
+      "Pritaikyta telefonui",
+      "Domenas",
+    ],
   },
 ];
 
@@ -167,11 +180,23 @@ export default function PortfolioPage() {
                     <span className="font-condensed text-2xl leading-none text-white/15">{project.index}</span>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     <h2 className="font-condensed text-[clamp(2.25rem,10vw,3.5rem)] uppercase leading-[0.95] text-white">
                       {project.name}
                     </h2>
                     <p className="max-w-md text-base leading-8 text-white/55">{project.description}</p>
+
+                    {/* What was actually delivered — the question a buyer is
+                        really asking is what they get for the money. */}
+                    <ul className="space-y-2 border-t border-white/10 pt-5">
+                      {project.scope.map((item) => (
+                        <li key={item} className="flex gap-3 text-sm leading-6 text-white/60">
+                          <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#c7a97b]" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+
                     <span className="inline-flex items-center gap-2 pt-1 text-sm text-white/70 transition-colors duration-300 group-hover:text-[#c7a97b]">
                       {project.domain}
                       <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
