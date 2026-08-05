@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { SiteShell } from "@/components/site-shell";
@@ -106,7 +107,18 @@ const concepts: Concept[] = [
   },
 ];
 
-const projects = [
+type Project = {
+  index: string;
+  category: string;
+  name: string;
+  description: string;
+  scope: string[];
+  url?: string;
+  domain?: string;
+  status?: string;
+};
+
+const projects: Project[] = [
   {
     index: "01",
     category: "Shopify parduotuvė",
@@ -138,6 +150,19 @@ const projects = [
       "Domenas",
     ],
   },
+  {
+    index: "03",
+    category: "Shopify parduotuvė",
+    name: "Drivio",
+    status: "Paruošta, dar neviešinama",
+    description: "Vieno produkto parduotuvė automobilių priežiūros prekei — nuo logotipo iki viso puslapio.",
+    scope: [
+      "Logotipas ir prekės ženklo stilius",
+      "Vieno produkto Shopify parduotuvė",
+      "Produkto puslapis, krepšelis, apmokėjimas",
+      "Lietuviškas tekstas ir struktūra",
+    ],
+  },
 ];
 
 export const metadata = {
@@ -166,14 +191,22 @@ export default function PortfolioPage() {
 
       <section className="mx-auto mt-14 max-w-7xl px-6 lg:px-10">
         <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
-          {projects.map((project, index) => (
+          {projects.map((project, index) => {
+            // Not every project has a public URL — one is delivered but not yet
+            // launched, so it renders as a plain card rather than a dead link.
+            const Card = project.url ? "a" : "div";
+            const linkProps = project.url
+              ? { href: project.url, target: "_blank", rel: "noreferrer" }
+              : {};
+
+            return (
             <RevealSection key={project.name} delay={index * 0.08}>
               <TiltCard intensity={2.5} className="h-full">
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex h-full flex-col justify-between gap-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition-colors duration-500 hover:border-[#c7a97b]/40 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c7a97b] lg:p-10"
+                <Card
+                  {...linkProps}
+                  className={`group flex h-full flex-col justify-between gap-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c7a97b] lg:p-10 ${
+                    project.url ? "hover:border-[#c7a97b]/40 hover:bg-white/[0.05]" : ""
+                  }`}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <p className="text-xs uppercase tracking-[0.35em] text-[#c7a97b]">{project.category}</p>
@@ -197,17 +230,60 @@ export default function PortfolioPage() {
                       ))}
                     </ul>
 
-                    <span className="inline-flex items-center gap-2 pt-1 text-sm text-white/70 transition-colors duration-300 group-hover:text-[#c7a97b]">
-                      {project.domain}
-                      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </span>
+                    {project.url ? (
+                      <span className="inline-flex items-center gap-2 pt-1 text-sm text-white/70 transition-colors duration-300 group-hover:text-[#c7a97b]">
+                        {project.domain}
+                        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </span>
+                    ) : (
+                      <span className="inline-flex w-fit items-center rounded-full border border-white/15 px-3 py-1 text-[11px] uppercase tracking-[0.25em] text-white/45">
+                        {project.status}
+                      </span>
+                    )}
                   </div>
-                </a>
+                </Card>
               </TiltCard>
             </RevealSection>
-          ))}
+            );
+          })}
         </div>
       </section>
+
+      {/* The strongest thing on this page: a business owner sitting on a site
+          like this recognises their own problem instantly. */}
+      <RevealSection className="mx-auto mt-20 max-w-7xl px-6 lg:mt-28 lg:px-10">
+        <div className="grid gap-8 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-12">
+          <figure className="space-y-3">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10">
+              <Image
+                src="/media/passmilte-pries.webp"
+                alt="Sena „Pas Smiltė“ svetainė — nemokamas WordPress.com šablonas"
+                width={1887}
+                height={1059}
+                quality={85}
+                sizes="(min-width: 1024px) 640px, 100vw"
+                className="w-full"
+              />
+            </div>
+            <figcaption className="text-[11px] uppercase tracking-[0.3em] text-white/35">
+              Prieš — 2016 m. WordPress.com šablonas
+            </figcaption>
+          </figure>
+
+          <div className="space-y-5">
+            <p className="text-xs uppercase tracking-[0.35em] text-[#c7a97b]">Prieš ir po</p>
+            <h2 className="font-condensed text-[clamp(1.9rem,8vw,2.75rem)] uppercase leading-[1.02] text-white">
+              Sena svetainė nekainuoja nieko — kol nesuskaičiuoji, kiek klientų ji nubaido.
+            </h2>
+            <p className="max-w-md text-base leading-8 text-white/55">
+              Nemokamas šablonas su svetima reklama viršuje, be kainų, be rezervacijos ir netinkamas telefonui. Naujoje versijoje matosi kambariai, kainos ir vienas mygtukas paskambinti.
+            </p>
+            <MagneticLink href="https://passmilte.lt" external variant="solid" className="min-h-[52px] sm:min-h-0">
+              Žiūrėti, kaip atrodo dabar <ArrowUpRight className="h-4 w-4" />
+            </MagneticLink>
+          </div>
+        </div>
+      </RevealSection>
 
       {/* Clearly separated from the client work above, so the two are never
           read as the same thing. */}
