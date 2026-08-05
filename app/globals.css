@@ -61,6 +61,28 @@ body {
   color: #ffffff;
 }
 
+/* Driven by CSS rather than Framer: as a child of the sliding nav panel, a
+   Framer animation here is deferred until the panel's own transition resolves,
+   which left the menu open but blank for ~300ms before anything appeared. */
+@keyframes nav-item-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.nav-item-rise {
+  animation: nav-item-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-item-rise {
+    animation: none;
+  }
+}
+
 @keyframes grain-shift {
   0%, 100% { transform: translate(0, 0); }
   10% { transform: translate(-1%, -2%); }

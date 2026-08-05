@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { PageTransition } from "@/components/page-transition";
@@ -100,13 +100,20 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            className="fixed inset-0 z-50 flex flex-col bg-black md:hidden"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-black md:hidden"
           >
-            <div className="flex items-center justify-between px-6 py-4">
+            {/* Same ambient treatment as the Hero, so the panel has depth
+                instead of reading as flat black behind a list. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,_rgba(199,169,123,0.13),_transparent_60%)]"
+            />
+
+            <div className="relative flex items-center justify-between px-6 py-4">
               <Link
                 href="/"
                 onClick={() => setMenuOpen(false)}
@@ -126,29 +133,38 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               </button>
             </div>
 
-            <nav className="flex flex-1 flex-col justify-center gap-1 px-8 pb-20">
+            <nav className="relative flex flex-1 flex-col justify-center gap-0.5 overflow-y-auto px-8 pb-16">
               {navItems.map((item, index) => {
                 const isActive = pathname === item.href;
                 return (
-                  <motion.div
+                  <Link
                     key={item.href}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.05 * index, ease: [0.22, 1, 0.36, 1] }}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="group flex items-center justify-between gap-4 border-b border-white/10 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c7a97b]"
                   >
-                    <Link
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
-                      className={`flex items-center justify-between border-b border-white/10 py-4 font-condensed text-4xl uppercase leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                        isActive ? "text-[#c7a97b]" : "text-white"
+                    {/* Each label rises from behind a mask rather than fading up,
+                        reusing the reveal vocabulary the rest of the site uses. */}
+                    {/* Hover shift lives on the mask, not the label: the label's
+                        transform is owned by the rise keyframe. */}
+                    <span className="overflow-hidden transition-transform duration-300 group-hover:translate-x-1.5 group-active:translate-x-1.5">
+                      <span
+                        style={{ animationDelay: `${index * 0.038}s` }}
+                        className={`nav-item-rise block font-condensed text-[clamp(2.25rem,12vw,3.5rem)] uppercase leading-[1.05] ${
+                          isActive ? "text-[#c7a97b]" : "text-white"
+                        }`}
+                      >
+                        {item.label}
+                      </span>
+                    </span>
+                    <span
+                      className={`shrink-0 font-sans text-xs normal-case tracking-normal transition-colors duration-300 group-hover:text-[#c7a97b] group-active:text-[#c7a97b] ${
+                        isActive ? "text-[#c7a97b]" : "text-white/30"
                       }`}
                     >
-                      {item.label}
-                      <span className="text-sm font-sans normal-case tracking-normal text-white/30">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                    </Link>
-                  </motion.div>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </Link>
                 );
               })}
             </nav>
@@ -156,14 +172,19 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
-              className="px-8 pb-10"
+              transition={{ duration: 0.45, delay: 0.34 }}
+              className="relative px-8 pb-10"
             >
+              {/* Was a mailto — the site routes everything to Instagram now, so
+                  leaving the address here contradicted every other surface. */}
               <a
-                href="mailto:by.azuolas@gmail.com"
-                className="text-sm text-white/40 underline decoration-white/20 underline-offset-4"
+                href="https://www.instagram.com/by.azuolas/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-sm text-sm text-white/40 underline decoration-white/20 underline-offset-4 transition-colors duration-300 hover:text-[#c7a97b] hover:decoration-[#c7a97b]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c7a97b]"
               >
-                by.azuolas@gmail.com
+                @by.azuolas
+                <ArrowUpRight className="h-3.5 w-3.5" />
               </a>
             </motion.div>
           </motion.div>
