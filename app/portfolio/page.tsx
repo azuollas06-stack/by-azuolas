@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { SiteShell } from "@/components/site-shell";
@@ -6,7 +5,6 @@ import { RevealSection } from "@/components/reveal-section";
 import { MagneticLink } from "@/components/magnetic-link";
 import { SplitReveal } from "@/components/split-reveal";
 import { TiltCard } from "@/components/tilt-card";
-import { MaskReveal } from "@/components/mask-reveal";
 import { HorizontalScrollGallery } from "@/components/horizontal-scroll-gallery";
 
 type Concept = {
@@ -108,6 +106,27 @@ const concepts: Concept[] = [
   },
 ];
 
+const projects = [
+  {
+    index: "01",
+    category: "Shopify parduotuvė",
+    name: "Petora",
+    url: "https://petora.lt",
+    domain: "petora.lt",
+    description:
+      "El. parduotuvė augintinių prekėms. Prekių puslapiai, krepšelis, apmokėjimas, nuolaidų kodai ir atsiliepimai — viskas veikia kasdien.",
+  },
+  {
+    index: "02",
+    category: "Svetainė",
+    name: "Pas Smiltė",
+    url: "https://passmilte.lt",
+    domain: "passmilte.lt",
+    description:
+      "Svečių namų Palangoje svetainė. Septyni kambariai, aiškios kainos ir skambutis rezervacijai vienu paspaudimu.",
+  },
+];
+
 export const metadata = {
   title: "Portfelis",
 };
@@ -122,51 +141,57 @@ export default function PortfolioPage() {
             <SplitReveal
               as="h1"
               by="lines"
-              text="Vienas realus projektas. Penki premium konceptai."
+              text="Parduotuvės ir svetainės, kurios jau dirba."
               className="font-condensed text-[clamp(2rem,9vw,2.6rem)] uppercase leading-[1] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.9]"
             />
           </div>
           <p className="max-w-xl text-lg leading-8 text-white/50">
-            Konceptai parodo, kaip galėtų atrodyti jūsų prekės ženklas — sukurti kaip kryptingi dizaino pratimai, ne kaip tikri klientų darbai.
+            Dalies darbų viešai nerodau — kai kurie klientai to prašo. Žemiau tie, kuriuos galiu parodyti: atidarykite ir pasižiūrėkite, kaip veikia.
           </p>
         </div>
       </section>
 
-      <RevealSection className="mx-auto mt-14 max-w-7xl px-6 lg:px-10">
-        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] lg:grid lg:grid-cols-[1.1fr_0.9fr]">
-          <TiltCard className="relative aspect-[4/5] lg:aspect-auto">
-            <MaskReveal className="absolute inset-0">
-              <Image
-                src="/media/azuolas-sedi.png"
-                alt="BY.AZUOLAS asmeninio prekės ženklo projektas"
-                fill
-                quality={90}
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-                priority
-              />
-            </MaskReveal>
-          </TiltCard>
-          <div className="flex flex-col justify-center gap-4 p-8 lg:p-12">
-            <p className="text-xs uppercase tracking-[0.35em] text-white/50">01 · Realus projektas</p>
-            <h2 className="font-display text-3xl leading-tight text-white sm:text-4xl">
-              Personal brand experience
-            </h2>
-            <p className="max-w-md text-base leading-8 text-white/55">
-              Ši svetainė — vienintelis šiuo metu užbaigtas realus projektas: asmeninio prekės ženklo ir skaitmeninės patirties platforma, orientuota į pasitikėjimą ir aukštą kokybę nuo pirmos sekundės.
-            </p>
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-[11px] uppercase tracking-[0.25em] text-white/50">
-              Jūs čia dabar žiūrite
-            </span>
-          </div>
-        </div>
-      </RevealSection>
+      <section className="mx-auto mt-14 max-w-7xl px-6 lg:px-10">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
+          {projects.map((project, index) => (
+            <RevealSection key={project.name} delay={index * 0.08}>
+              <TiltCard intensity={2.5} className="h-full">
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex h-full flex-col justify-between gap-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition-colors duration-500 hover:border-[#c7a97b]/40 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c7a97b] lg:p-10"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <p className="text-xs uppercase tracking-[0.35em] text-[#c7a97b]">{project.category}</p>
+                    <span className="font-condensed text-2xl leading-none text-white/15">{project.index}</span>
+                  </div>
 
-      <div className="mx-auto mt-14 max-w-7xl px-6 lg:px-10">
-        <p className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-white/40 lg:hidden">
-          Konceptai
+                  <div className="space-y-4">
+                    <h2 className="font-condensed text-[clamp(2.25rem,10vw,3.5rem)] uppercase leading-[0.95] text-white">
+                      {project.name}
+                    </h2>
+                    <p className="max-w-md text-base leading-8 text-white/55">{project.description}</p>
+                    <span className="inline-flex items-center gap-2 pt-1 text-sm text-white/70 transition-colors duration-300 group-hover:text-[#c7a97b]">
+                      {project.domain}
+                      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
+                  </div>
+                </a>
+              </TiltCard>
+            </RevealSection>
+          ))}
+        </div>
+      </section>
+
+      {/* Clearly separated from the client work above, so the two are never
+          read as the same thing. */}
+      <div className="mx-auto mt-20 max-w-7xl px-6 lg:mt-28 lg:px-10">
+        <p className="text-sm uppercase tracking-[0.35em] text-white/50">Koncepcijos</p>
+        <p className="mt-3 max-w-xl text-base leading-8 text-white/45">
+          Kryptys skirtingoms sritims — nuo restorano iki mados prekės ženklo. Taip atrodo darbo pradžia, kol dar neturime jūsų turinio.
         </p>
-        <p className="hidden items-center gap-2 text-xs uppercase tracking-[0.3em] text-white/40 lg:flex">
+        <p className="mt-4 hidden items-center gap-2 text-xs uppercase tracking-[0.3em] text-white/40 lg:flex">
           Slinkite žemyn — konceptai juda horizontaliai <ArrowRight className="h-3.5 w-3.5" />
         </p>
       </div>
