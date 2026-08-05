@@ -3,6 +3,9 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ArrowUpRight } from "lucide-react";
+
+import { MagneticLink } from "@/components/magnetic-link";
 
 const INSTAGRAM_URL = "https://www.instagram.com/by.azuolas/";
 
@@ -111,6 +114,17 @@ export function OrbitContact() {
       <p className="relative mt-7 max-w-xs text-base leading-7 text-white/50 sm:mt-9 sm:max-w-sm sm:text-lg sm:leading-8">
         Greičiausiai atsakau Instagram žinute. Parašykite — aptarsime jūsų parduotuvę.
       </p>
+
+      {/* The handle reads as a statement, not a control — especially on touch,
+          where there is no hover to discover it. This is the actual affordance. */}
+      <MagneticLink
+        href={INSTAGRAM_URL}
+        external
+        variant="solid"
+        className="relative mt-9 min-h-[52px] transition-shadow duration-300 hover:shadow-[0_0_36px_rgba(199,169,123,0.28)] sm:mt-11 sm:min-h-0"
+      >
+        Rašyti žinutę <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+      </MagneticLink>
     </section>
   );
 }
