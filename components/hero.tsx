@@ -152,7 +152,8 @@ export function Hero({ active = true }: { active?: boolean }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: active ? 1 : 0 }}
         transition={{ duration: 0.6, delay: 1.05 }}
-        className="group absolute bottom-8 flex flex-col items-center gap-2 text-white/30 transition-colors duration-300 hover:text-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        // p-2 lifts the hit area past 44px; bottom-6 keeps it visually where it was.
+        className="group absolute bottom-6 flex flex-col items-center gap-2 rounded-lg p-2 text-white/30 transition-colors duration-300 hover:text-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         aria-label="Slinkti į kitą skiltį"
       >
         <span className="text-[10px] uppercase tracking-[0.3em]">Slinkite žemyn</span>

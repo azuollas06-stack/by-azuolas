@@ -94,9 +94,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-black text-white">
       <header ref={headerRef} className="sticky top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+          {/* Negative margin cancels the padding, so the hit area grows to 44px
+              without moving anything. The mark itself is only 24px tall. */}
           <Link
             href="/"
-            className="flex items-center gap-2 rounded-sm whitespace-nowrap text-xs font-semibold uppercase tracking-[0.18em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:gap-3 sm:text-sm sm:tracking-[0.35em]"
+            className="-my-2.5 flex items-center gap-2 rounded-sm whitespace-nowrap py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:gap-3 sm:text-sm sm:tracking-[0.35em]"
           >
             <span className="relative flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/10 sm:h-7 sm:w-7">
               <Image src="/media/logo-mark.png" alt="" width={40} height={40} className="h-4 w-4 object-contain sm:h-5 sm:w-5" />
