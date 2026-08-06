@@ -11,7 +11,15 @@ import { StructuredData } from "@/components/structured-data";
 import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
-const playfair = Playfair_Display({ subsets: ["latin", "latin-ext"], variable: "--font-display", weight: ["400", "500", "600", "700"] });
+// Every `font-display` element on the site is italic and none set a weight, so
+// this loads the real italic — which was never requested, leaving the browser
+// to fake it by skewing the upright — and drops 500/600/700, which nothing used.
+const playfair = Playfair_Display({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-display",
+  weight: ["400"],
+  style: ["normal", "italic"],
+});
 const bebasNeue = Bebas_Neue({ subsets: ["latin", "latin-ext"], variable: "--font-condensed", weight: "400" });
 
 const title = "BY.AZUOLAS | Premium skaitmeninis dizainas verslui";
