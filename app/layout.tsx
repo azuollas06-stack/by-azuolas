@@ -7,6 +7,7 @@ import { FilmGrain } from "@/components/film-grain";
 import { CursorGlow } from "@/components/cursor-glow";
 import { ScrollProgress } from "@/components/scroll-progress";
 import { MotionProvider } from "@/components/motion-provider";
+import { StructuredData } from "@/components/structured-data";
 import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${playfair.variable} ${bebasNeue.variable}`}
     >
       <body>
+        <StructuredData />
         {/* Wraps the overlays too — CursorGlow and ScrollProgress are Framer
             components and sit outside SmoothScroll. */}
         <MotionProvider>
