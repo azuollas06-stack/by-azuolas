@@ -1,7 +1,22 @@
 import Image from "next/image";
+import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { ArrowRight } from "lucide-react";
 
 import { ConceptBadge } from "@/components/concept-badge";
+
+// Declared here rather than in the root layout: these two families are used by
+// this concept page alone, and loading them globally meant every visitor to the
+// home page downloaded five font families to render three.
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-grid",
+  weight: ["400", "500", "700"],
+});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-mono-grid",
+  weight: ["400", "500"],
+});
 
 export const metadata = {
   title: "Konceptas — Technical Grid",
@@ -16,7 +31,10 @@ const stats = [
 
 export default function GridPage() {
   return (
-    <div className="min-h-screen bg-black text-white" style={{ fontFamily: "var(--font-grid)" }}>
+    <div
+      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} min-h-screen bg-black text-white`}
+      style={{ fontFamily: "var(--font-grid)" }}
+    >
       <ConceptBadge label="04" name="Technical Grid" dark />
 
       <div

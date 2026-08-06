@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, Bebas_Neue, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Inter, Playfair_Display, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
 import { SmoothScroll } from "@/components/smooth-scroll";
@@ -12,8 +12,6 @@ import { SITE_URL } from "@/lib/site";
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin", "latin-ext"], variable: "--font-display", weight: ["400", "500", "600", "700"] });
 const bebasNeue = Bebas_Neue({ subsets: ["latin", "latin-ext"], variable: "--font-condensed", weight: "400" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin", "latin-ext"], variable: "--font-grid", weight: ["400", "500", "700"] });
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono-grid", weight: ["400", "500"] });
 
 const title = "BY.AZUOLAS | Premium skaitmeninis dizainas verslui";
 const description =
@@ -62,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="lt"
-      className={`${inter.variable} ${playfair.variable} ${bebasNeue.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${playfair.variable} ${bebasNeue.variable}`}
     >
       <body>
         {/* Wraps the overlays too — CursorGlow and ScrollProgress are Framer
