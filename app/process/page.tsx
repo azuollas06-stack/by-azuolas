@@ -6,12 +6,12 @@ import { PinnedSteps } from "@/components/pinned-steps";
 import { SplitReveal } from "@/components/split-reveal";
 
 const steps = [
-  { title: "Tyrimas", description: "Suprantu jūsų tikslus, auditoriją ir verslo kontekstą." },
-  { title: "Strategija", description: "Sukuriu aiškią komunikacijos ir dizaino kryptį." },
-  { title: "Dizainas", description: "Formuoju vizualinį ir patirties modelį su dėmesiu detalėms." },
-  { title: "Kūrimas", description: "Įgyvendinu projektą moderniu, aukštos kokybės tech sprendimu." },
-  { title: "Testavimas", description: "Tikriname, ar projektas veikia intuityviai ir efektyviai." },
-  { title: "Paleidimas ir palaikymas", description: "Padedu projektą paleisti ir toliau prižiūrėti jo kokybę." },
+  { title: "Tyrimas", description: "Peržiūriu jūsų verslą, konkurentus ir tai, kaip šiuo metu parduodate." },
+  { title: "Strategija", description: "Nusprendžiame, kokios parduotuvės ar svetainės jums iš tikrųjų reikia." },
+  { title: "Dizainas", description: "Piešiu kiekvieną ekraną taip, kad jis vestų prie pirkimo, ne tik atrodytų gražiai." },
+  { title: "Kūrimas", description: "Sukuriu Shopify parduotuvę arba svetainę, kuri veikia greitai ir be klaidų." },
+  { title: "Testavimas", description: "Tikrinu krepšelį, apmokėjimą ir greitį telefone — ten dažniausiai prarandami pirkėjai." },
+  { title: "Paleidimas ir palaikymas", description: "Paleidžiame kartu, ir lieku šalia, kai reikia ką nors pakoreguoti." },
 ];
 
 export const metadata = {
@@ -27,7 +27,7 @@ export default function ProcessPage() {
           <SplitReveal
             as="h1"
             by="words"
-            text="Kiekvienas žingsnis yra apgalvotas ir nuoseklus."
+            text="Šeši žingsniai nuo pirmo pokalbio iki paleidimo."
             className="font-condensed text-[clamp(2rem,9vw,2.6rem)] uppercase leading-[1] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.92]"
           />
           <p className="text-lg leading-8 text-white/50">

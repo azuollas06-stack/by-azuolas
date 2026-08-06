@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -14,16 +14,7 @@ import { MagneticLink } from "@/components/magnetic-link";
 import { RevealSection } from "@/components/reveal-section";
 import { SplitReveal } from "@/components/split-reveal";
 import { MaskReveal } from "@/components/mask-reveal";
-import { PinnedSteps } from "@/components/pinned-steps";
-
-const processSteps = [
-  { title: "Tyrimas", description: "Peržiūriu jūsų verslą, konkurentus ir tai, kaip šiuo metu parduodate." },
-  { title: "Strategija", description: "Nusprendžiame, kokios parduotuvės ar svetainės jums iš tikrųjų reikia." },
-  { title: "Dizainas", description: "Piešiu kiekvieną ekraną taip, kad jis vestų prie pirkimo, ne tik atrodytų gražiai." },
-  { title: "Kūrimas", description: "Sukuriu Shopify parduotuvę arba svetainę, kuri veikia greitai ir be klaidų." },
-  { title: "Testavimas", description: "Tikrinu krepšelį, apmokėjimą ir greitį telefone — ten dažniausiai prarandami pirkėjai." },
-  { title: "Paleidimas ir palaikymas", description: "Paleidžiame kartu, ir lieku šalia, kai reikia ką nors pakoreguoti." },
-];
+import { BeforeAfter } from "@/components/before-after";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -242,22 +233,44 @@ export default function Home() {
             <SplitReveal
               as="span"
               by="chars"
-              text="Kaip dirbu"
+              text="Prieš ir po"
               className="text-xs uppercase tracking-[0.3em] text-white/50 sm:text-sm"
             />
           </div>
 
+          {/* This replaced the six process steps. Proof of outcome belongs in
+              the position a visitor reaches second; how I work belongs on
+              /process, where someone already interested goes looking for it. */}
           <section className="bg-black px-6 py-16 sm:px-10 sm:py-24 lg:py-28">
-            <div className="mx-auto max-w-7xl">
-              <SplitReveal
-                as="h2"
-                by="words"
-                text="Šeši žingsniai nuo pirmo pokalbio iki paleidimo."
-                className="font-condensed text-[clamp(2rem,9vw,2.6rem)] uppercase leading-[1] text-white sm:text-[clamp(2.6rem,6vw,5rem)] sm:leading-[0.92]"
-              />
-              <div className="mt-10 sm:mt-14">
-                <PinnedSteps steps={processSteps} />
+            <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+              <div>
+                <SplitReveal
+                  as="h2"
+                  by="words"
+                  text="Sena svetainė nekainuoja nieko — kol nesuskaičiuoji, kiek klientų ji nubaido."
+                  className="font-condensed text-[clamp(2rem,9vw,2.6rem)] uppercase leading-[1] text-white sm:text-[clamp(2.4rem,5vw,3.6rem)] sm:leading-[0.96]"
+                />
+                <p className="mt-6 max-w-md text-base leading-7 text-white/50 sm:mt-8 sm:text-lg sm:leading-8">
+                  Svečių namai Palangoje. Buvo nemokamas šablonas su svetima reklama viršuje, be kainų ir netinkamas telefonui. Dabar matosi kambariai, kaina ir vienas mygtukas paskambinti.
+                </p>
+                <div className="mt-8 flex flex-col items-start gap-4 sm:mt-10 sm:flex-row sm:items-center sm:gap-6">
+                  <MagneticLink href="https://passmilte.lt" external variant="solid" className="min-h-[52px] sm:min-h-0">
+                    Žiūrėti gyvai <ArrowUpRight className="h-4 w-4" />
+                  </MagneticLink>
+                  <MagneticLink href="/portfolio" variant="ghost-dark">
+                    Daugiau darbų <ArrowRight className="h-4 w-4" />
+                  </MagneticLink>
+                </div>
               </div>
+
+              <BeforeAfter
+                beforeSrc="/media/passmilte-pries.webp"
+                afterSrc="/media/passmilte-po.webp"
+                beforeAlt="Sena „Pas Smiltė“ svetainė — nemokamas WordPress.com šablonas"
+                afterAlt="Nauja „Pas Smiltė“ svetainė su kainomis ir rezervacija"
+                beforeLabel="Prieš"
+                afterLabel="Po"
+              />
             </div>
           </section>
 
