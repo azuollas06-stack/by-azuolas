@@ -103,7 +103,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             </span>
             <span>BY.AZUOLAS</span>
           </Link>
-          <nav className="hidden items-center gap-7 text-sm text-white/60 md:flex">
+          <nav className="hidden items-center gap-7 text-sm text-white/60 lg:flex">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -127,7 +127,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
           <button
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white/70 transition-colors hover:border-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black md:hidden"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white/70 transition-colors hover:border-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black lg:hidden"
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? "Uždaryti navigaciją" : "Atidaryti navigaciją"}
             aria-expanded={menuOpen}
@@ -152,7 +152,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               // Either a decisive flick or a deliberate drag past the threshold.
               if (info.offset.x > 90 || info.velocity.x > 500) closeMenu();
             }}
-            className="fixed inset-0 z-50 flex touch-pan-y flex-col overflow-hidden bg-black md:hidden"
+            className="fixed inset-0 z-50 flex touch-pan-y flex-col overflow-hidden bg-black lg:hidden"
           >
             {/* Same ambient treatment as the Hero, so the panel has depth
                 instead of reading as flat black behind a list. */}
