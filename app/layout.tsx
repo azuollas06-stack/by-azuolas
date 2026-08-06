@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/smooth-scroll";
 import { FilmGrain } from "@/components/film-grain";
 import { CursorGlow } from "@/components/cursor-glow";
 import { ScrollProgress } from "@/components/scroll-progress";
+import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin", "latin-ext"], variable: "--font-display", weight: ["400", "500", "600", "700"] });
@@ -18,12 +19,13 @@ const description =
   "Kuriu premium svetaines, Shopify parduotuves, prekės ženklo identitetą ir UX/UI dizainą verslams, kurie nori atrodyti ir jaustis premium.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://byazuolas.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: title,
     template: "%s | BY.AZUOLAS",
   },
   description,
+  alternates: { canonical: "/" },
   keywords: [
     "premium svetainių kūrimas",
     "Shopify parduotuvė",
@@ -38,6 +40,7 @@ export const metadata: Metadata = {
     description,
     type: "website",
     locale: "lt_LT",
+    url: SITE_URL,
     siteName: "BY.AZUOLAS",
     images: [{ url: "/media/azuolas-sedi.png", width: 1536, height: 1024 }],
   },
