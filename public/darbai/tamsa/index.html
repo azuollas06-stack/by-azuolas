@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TAMSA festivalis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Jost:wght@400;500;600;700&display=swap">
+<style>
+/* TAMSA — muzikos festivalio koncepcija. Built from the poster: black night, cream paper, orange sun, ultramarine concrete.
+   Everything graphic is drawn live: the halftone sun and the beam from the A are one WebGL shader; the music is Web Audio. */
+:root{
+  --k:#0d0c0b; --k2:#181614; --c:#f3e6cc; --c2:#c9bca4; --o:#ff4b14; --o2:#d93a0b; --b:#2233c4; --b2:#16208a; --p:#fef0df;
+  --big:"Anton","Impact","Arial Narrow",sans-serif; --t:"Jost","Futura","Century Gothic",system-ui,sans-serif;
+  --pad:max(16px,env(safe-area-inset-left,0px));
+}
+*{box-sizing:border-box}
+html{overflow-x:clip;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--k);color:var(--c);font:400 17px/1.55 var(--t);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--o);outline-offset:3px}
+.wrap{max-width:1320px;margin-inline:auto;padding-inline:max(var(--pad),24px)}
+.caps{font:600 13px/1.2 var(--t);letter-spacing:.28em;text-transform:uppercase}
+.big{font-family:var(--big);font-weight:400;text-transform:uppercase;line-height:.88;letter-spacing:.005em;margin:0}
+.grain{position:relative;isolation:isolate}
+.grain::after{content:"";position:absolute;inset:0;background:url(img/grain.png);opacity:.55;pointer-events:none;z-index:5}
+
+/* ---------- nav ---------- */
+nav{position:fixed;inset:0 0 auto;z-index:50;display:flex;align-items:center;gap:18px;height:64px;padding-inline:max(var(--pad),24px);
+  background:linear-gradient(var(--k) 30%,rgba(13,12,11,0));transition:background .3s}
+nav.solid{background:var(--k);box-shadow:0 1px 0 #2a2622}
+nav .logo{height:22px;width:auto;opacity:0;transform:translateY(-6px);transition:opacity .3s,transform .3s}
+nav.solid .logo{opacity:1;transform:none}
+nav .links{display:flex;gap:26px;margin-left:auto}
+nav .links a{text-decoration:none;font:500 14px var(--t);letter-spacing:.14em;text-transform:uppercase;color:var(--c2)}
+nav .links a:hover{color:var(--c)}
+.snd{appearance:none;border:0;cursor:pointer;display:flex;align-items:center;gap:10px;height:40px;padding:0 16px 0 12px;border-radius:999px;background:var(--k2);box-shadow:inset 0 0 0 1px #3a342e;font:500 13px var(--t);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.snd .eq{display:flex;align-items:flex-end;gap:2px;height:16px;width:18px}
+.snd .eq i{flex:1;background:var(--o);height:100%;transform-origin:bottom;transform:scaleY(.2)}
+.snd[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--o)}
+.snd .np{max-width:170px;overflow:hidden;text-overflow:ellipsis}
+.buy{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 18px;border-radius:999px;background:var(--o);color:var(--k);text-decoration:none;font:600 13px var(--t);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;border:0;cursor:pointer}
+.buy:hover{background:var(--c)}
+@media(max-width:900px){nav .links{display:none}.snd{margin-left:auto}.snd .np{max-width:90px}}
+@media(max-width:420px){.snd .lbl{display:none}.snd{padding:0 12px}}
+
+/* ---------- hero poster ---------- */
+.hero{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;background:var(--k)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero .wm{position:absolute;left:50%;top:max(76px,9vh);transform:translateX(-50%);width:min(calc(100% - 48px),1340px,calc((100svh - 140px) * 1.05));height:auto;z-index:3;overflow:visible}
+.hero .sub{position:absolute;z-index:3;text-align:right;display:flex;flex-direction:column;gap:14px}
+.hero .sub .caps{font-size:clamp(12px,1.25vw,17px);letter-spacing:.32em}
+.hero .sub .caps+.caps{font-size:clamp(11px,1vw,14px)}
+.hero .bld{position:absolute;left:0;bottom:0;z-index:2;height:auto;width:min(58vw,calc(76svh * 1.125))}
+.hero .tower{position:absolute;z-index:2;width:clamp(26px,3.4vw,52px);height:auto;transform:translate(-50%,-92%)}
+.hero .foot{position:absolute;right:max(var(--pad),24px);bottom:max(22px,env(safe-area-inset-bottom,0px));z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:14px;text-align:right}
+.hero .foot .caps{font-size:clamp(14px,1.3vw,18px);letter-spacing:.18em}
+.hero .tag{position:absolute;left:max(var(--pad),24px);top:76px;z-index:4;font:500 11px var(--t);letter-spacing:.22em;text-transform:uppercase;color:var(--c2);display:none}
+@media(hover:none){.hero .hint{display:none}}
+.hero .hint{font:500 12px var(--t);letter-spacing:.12em;text-transform:uppercase;color:var(--c2)}
+.hero .mdate{display:none}
+@media(max-width:700px){
+  .hero .mdate{display:block;color:var(--o)}.hero .foot .caps{display:none}
+  .hero .bld{width:94vw}
+  .hero .foot{left:auto}
+}
+
+/* ---------- ticker ---------- */
+.tick{background:var(--b);color:var(--c);overflow:hidden;white-space:nowrap;border-block:1px solid #000}
+.tick div{display:inline-flex;gap:0;padding-block:16px;animation:tk 38s linear infinite;will-change:transform}
+.tick span{font:24px/1 var(--big);letter-spacing:.06em;padding-inline:22px;display:inline-flex;align-items:center;gap:44px}
+.tick span::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--o)}
+@keyframes tk{to{transform:translateX(-50%)}}
+
+/* ---------- intro + countdown ---------- */
+.intro{padding-block:110px 100px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:60px;align-items:end}
+.intro h2{font-size:clamp(56px,8.4vw,128px)}
+.intro h2 em{font-style:normal;color:var(--o)}
+.intro p{font-size:19px;color:var(--c2);max-width:46ch;margin:0 0 30px}
+.cd{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:2px solid var(--c)}
+.cd div{padding:18px 0 0;display:flex;flex-direction:column;gap:6px}
+.cd b{font:clamp(44px,5.4vw,78px)/.9 var(--big);font-weight:400;font-variant-numeric:tabular-nums}
+.cd span{font:500 12px var(--t);letter-spacing:.2em;text-transform:uppercase;color:var(--c2)}
+@media(max-width:860px){.intro{grid-template-columns:1fr;gap:36px;padding-block:80px 70px}}
+
+/* ---------- lineup ---------- */
+.lineup{background:var(--k);padding-block:30px 110px;position:relative}
+.lhead{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;border-top:2px solid var(--c);padding-top:20px;margin-bottom:46px}
+.lhead h2{font-size:clamp(48px,6vw,84px)}
+.days{display:flex;gap:6px;background:var(--k2);padding:4px;border-radius:999px;box-shadow:inset 0 0 0 1px #3a342e}
+.days button{appearance:none;border:0;background:transparent;cursor:pointer;height:42px;padding:0 20px;border-radius:999px;font:600 13px var(--t);letter-spacing:.14em;text-transform:uppercase;color:var(--c2)}
+.days button[aria-pressed="true"]{background:var(--c);color:var(--k)}
+.acts{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;column-gap:.32em;row-gap:.08em;text-align:center}
+.act{appearance:none;border:0;background:none;padding:0;cursor:pointer;font-family:var(--big);text-transform:uppercase;line-height:1;color:var(--c);display:inline-flex;align-items:center;gap:.25em;transition:color .2s}
+.act::after{content:"";width:.2em;height:.2em;border-radius:50%;background:var(--o);margin-left:.06em;flex:none}
+.act:last-child::after{display:none}
+.act.t1{font-size:clamp(54px,9vw,132px)}
+.act.t1::after{display:none}
+.act.t2{font-size:clamp(34px,5vw,72px);color:var(--c)}
+.act.t3{font-size:clamp(24px,3vw,42px);color:var(--c2)}
+.act:hover,.act.on{color:var(--o)}
+.act.on::before{content:"";width:.42em;height:.42em;border-radius:50%;background:radial-gradient(circle,var(--o) 32%,transparent 34%) 0 0/6px 6px;box-shadow:0 0 0 2px var(--o);animation:sp 1.6s linear infinite}
+@keyframes sp{to{transform:rotate(1turn)}}
+.tier{width:100%;height:0}
+.actcard{margin:52px auto 0;max-width:760px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:22px;align-items:center;padding:18px 22px;border-radius:16px;background:var(--k2);box-shadow:inset 0 0 0 1px #3a342e}
+.actcard .disc{width:64px;height:64px;border-radius:50%;background:var(--o);position:relative;overflow:hidden}
+.actcard .disc::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,var(--k) 36%,transparent 38%) 0 0/7px 7px;-webkit-mask:linear-gradient(170deg,transparent 30%,#000);mask:linear-gradient(170deg,transparent 30%,#000)}
+.actcard.playing .disc{animation:sp 2.4s linear infinite}
+.actcard b{font:30px/1 var(--big);text-transform:uppercase;font-weight:400;display:block}
+.actcard small{display:block;color:var(--c2);font-size:15px;margin-top:6px}
+.lnote{text-align:center;color:var(--c2);font-size:14px;margin:18px 0 0}
+@media(max-width:560px){.days button{padding:0 12px;font-size:12px;letter-spacing:.08em;white-space:nowrap}.days{width:100%}.days button{flex:1}.actcard{grid-template-columns:auto minmax(0,1fr)}.actcard .buy{grid-column:1/-1}}
+
+/* ---------- programme ---------- */
+.prog{background:var(--o);color:var(--k);padding-block:100px}
+.prog .lhead{border-color:var(--k)}
+.prog .days{background:rgba(13,12,11,.12);box-shadow:none}
+.prog .days button{color:var(--k)}
+.prog .days button[aria-pressed="true"]{background:var(--k);color:var(--o)}
+.tt{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;border-radius:14px;background:rgba(13,12,11,.07);scrollbar-color:var(--k) transparent}
+.tt .grid{position:relative;min-width:1180px;padding:0 0 14px}
+.tt .hours{display:grid;margin-left:150px;height:40px;align-items:center}
+.tt .hours span{font:600 12px var(--t);letter-spacing:.06em;border-left:1px solid rgba(13,12,11,.3);padding-left:6px;height:100%;display:flex;align-items:center}
+.tt .row{display:flex;height:92px;border-top:1px solid rgba(13,12,11,.25)}
+.tt .stg{position:sticky;left:0;flex:none;width:150px;display:flex;flex-direction:column;justify-content:center;padding-left:16px;background:var(--o);z-index:2}
+.tt .trk{position:relative;flex:1}
+.tt .stg b{font:22px/1 var(--big);font-weight:400;text-transform:uppercase}
+.tt .stg small{font-size:12px;opacity:.75}
+.slot{position:absolute;top:8px;bottom:8px;border:0;border-radius:10px;background:var(--k);color:var(--c);text-align:left;padding:8px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;overflow:hidden;min-width:0}
+.slot b{font:15px/1.15 var(--big);font-weight:400;text-transform:uppercase;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.slot small{font-size:12px;color:var(--c2);white-space:nowrap;margin-top:4px}
+.slot .st{position:absolute;right:6px;top:6px;width:9px;height:9px;border-radius:50%;display:none}
+.slot[aria-pressed="true"]{background:var(--c);color:var(--k)}
+.slot[aria-pressed="true"] small{color:#5a5248}
+.slot[aria-pressed="true"] .st{background:var(--o);display:block}
+.tlist{display:flex;flex-direction:column;gap:6px;padding:6px}
+.tst{display:flex;align-items:baseline;gap:10px;padding:14px 8px 6px}.tst b{font:26px/1 var(--big);font-weight:400;text-transform:uppercase}.tst small{font-size:13px}
+.slot.tl{position:relative;inset:auto;display:grid;grid-template-columns:96px minmax(0,1fr);align-items:center;padding:14px 30px 14px 14px;min-height:54px}
+.slot.tl small{margin:0;font-size:14px}.slot.tl b{font-size:20px;-webkit-line-clamp:1}.slot.tl .st{top:50%;right:14px;transform:translateY(-50%);width:11px;height:11px}
+.slot.clash{outline:3px solid var(--b);outline-offset:-3px}
+.plan{margin-top:34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:30px;align-items:start}
+.plan h3{font:40px/.9 var(--big);font-weight:400;text-transform:uppercase;margin:0 0 10px}
+.plan p{margin:0;max-width:40ch}
+.plan ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.plan li{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:14px;align-items:center;background:rgba(13,12,11,.09);border-radius:10px;padding:11px 14px;font-weight:500}
+.plan li .w{font:600 12px var(--t);letter-spacing:.08em;color:var(--b2);text-transform:uppercase}
+.plan li.empty{display:block;background:transparent;box-shadow:inset 0 0 0 1.5px rgba(13,12,11,.35);color:rgba(13,12,11,.75)}
+@media(max-width:760px){.plan{grid-template-columns:1fr}.plan li{grid-template-columns:86px minmax(0,1fr)}.plan li .w{grid-column:1/-1}}
+
+/* ---------- map ---------- */
+.map{background:var(--b);padding-block:100px;color:var(--c)}
+.map .lhead{border-color:var(--c)}
+.mapbox{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:28px;align-items:stretch}
+.mapsvg{width:100%;height:auto;display:block;border-radius:18px;background:var(--b2)}
+.pin{cursor:pointer}
+.pin circle.r{fill:var(--o);stroke:var(--k);stroke-width:3;transition:transform .2s;transform-box:fill-box;transform-origin:center}
+.pin text{font:24px var(--big);fill:var(--k);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.pin:hover circle.r,.pin.on circle.r{transform:scale(1.18)}
+.pin.on circle.r{fill:var(--c)}
+.pin:focus-visible{outline:none}.pin:focus-visible circle.r{stroke:var(--c);stroke-width:5}
+.minfo{background:var(--k);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:14px}
+.minfo h3{font:44px/.9 var(--big);font-weight:400;text-transform:uppercase;margin:0}
+.minfo p{margin:0;color:var(--c2)}
+.legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:auto}
+.legend button{appearance:none;border:0;background:var(--k2);border-radius:10px;padding:10px 12px;text-align:left;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:14px}
+.legend button i{width:22px;height:22px;border-radius:50%;background:var(--o);color:var(--k);font:13px/22px var(--big);font-style:normal;text-align:center;flex:none}
+.legend button[aria-pressed="true"]{background:var(--c);color:var(--k)}
+@media(max-width:900px){.mapbox{grid-template-columns:1fr}}
+
+/* ---------- tickets ---------- */
+.tix{padding-block:110px;background:var(--k)}
+.tixgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:48px;align-items:start}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{appearance:none;border:0;cursor:pointer;text-align:left;background:var(--k2);border-radius:16px;padding:20px 22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;box-shadow:inset 0 0 0 1px #3a342e;color:var(--c)}
+.opt b{font:30px/1 var(--big);font-weight:400;text-transform:uppercase}
+.opt .pr{font:30px/1 var(--big);color:var(--o);grid-row:span 2;align-self:center}
+.opt small{color:var(--c2);font-size:15px}
+.opt[aria-checked="true"]{box-shadow:inset 0 0 0 2px var(--o);background:#221a14}
+.field{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.field label{font:600 12px var(--t);letter-spacing:.2em;text-transform:uppercase;color:var(--c2)}
+.field input{height:52px;border-radius:12px;border:0;background:var(--k2);box-shadow:inset 0 0 0 1px #3a342e;color:var(--c);font:500 18px var(--t);padding:0 16px;width:100%}
+.qty{display:flex;align-items:center;gap:0;background:var(--k2);border-radius:12px;box-shadow:inset 0 0 0 1px #3a342e;width:max-content}
+.qty button{appearance:none;border:0;background:none;width:52px;height:52px;font-size:22px;cursor:pointer;color:var(--c)}
+.qty output{min-width:40px;text-align:center;font:600 18px var(--t)}
+.sum{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--c);padding-top:16px;margin-top:6px}
+.sum b{font:52px/1 var(--big);font-weight:400}
+.ticket{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 23%;border-radius:22px;aspect-ratio:2.3/1;filter:drop-shadow(0 30px 40px rgba(0,0,0,.5));touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.ticket .main{position:relative;background:var(--k);border-radius:22px 0 0 22px;overflow:hidden;box-shadow:inset 0 0 0 1px #2c2824;container-type:inline-size}
+.ticket .main svg{position:absolute;inset:0;width:100%;height:100%}
+.ticket .ttl{position:absolute;right:5cqw;top:9cqw;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2.2cqw}
+.ticket .ttl svg{position:static;width:44cqw;height:auto}
+.ticket .ttl .caps{font-size:1.8cqw;letter-spacing:.3em}
+.ticket .ttl .nm{font:600 2.6cqw var(--t);letter-spacing:.14em;text-transform:uppercase;margin-top:2cqw;color:var(--o);max-width:44cqw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ticket .ttl .dt{font:600 2.3cqw var(--t);letter-spacing:.2em;text-transform:uppercase}
+.stub{position:relative;background:var(--k);border-radius:0 22px 22px 0;box-shadow:inset 0 0 0 1px #2c2824;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:12% 8%;cursor:grab;transform-origin:0 100%;container-type:inline-size;touch-action:none}
+.stub::before{content:"";position:absolute;left:-1px;top:14px;bottom:14px;border-left:3px dotted var(--c2)}
+.stub svg{width:78cqw;height:auto}
+.stub .ln{display:flex;flex-direction:column;gap:6cqw;width:56cqw}
+.stub .ln i{height:2px;background:var(--c)}
+.stub .no{font:600 11cqw var(--t);letter-spacing:.1em}
+.stub .ty{font:600 7cqw var(--t);letter-spacing:.2em;text-transform:uppercase;color:var(--o);text-align:center}
+.stub.drag{cursor:grabbing}
+.ticket:has(.stub.gone) .main{border-radius:22px;transition:border-radius .3s}
+.stub.gone{animation:fall .9s cubic-bezier(.5,0,.8,.6) forwards;pointer-events:none}
+@keyframes fall{to{transform:translate(30px,120vh) rotate(38deg)}}
+.tear{margin-top:16px;display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;color:var(--c2);font-size:15px}
+.msg{margin-top:16px;padding:16px 18px;border-radius:14px;background:var(--b);color:var(--c);display:none}
+.msg.on{display:block}
+.msg button{margin-top:10px}
+@media(max-width:900px){.tixgrid{grid-template-columns:1fr}.tixprev{order:-1}}
+
+/* ---------- merch ---------- */
+.merch{background:var(--p);color:var(--k);padding-block:100px}
+.merch .lhead{border-color:var(--k)}
+.mgrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:50px;align-items:center}
+.tee{position:relative;aspect-ratio:700/770;max-height:78vh;margin-inline:auto;width:100%}
+.tee img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .4s,transform .5s}
+.tee img.on{opacity:1}
+.tee img[data-v="side"]{transform:scale(.97)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{appearance:none;border:0;cursor:pointer;height:44px;min-width:52px;padding:0 16px;border-radius:999px;background:rgba(13,12,11,.07);font:600 13px var(--t);letter-spacing:.12em;text-transform:uppercase;color:var(--k)}
+.seg button[aria-pressed="true"]{background:var(--k);color:var(--p)}
+.mside{display:flex;flex-direction:column;gap:22px}
+.mside h3{font:clamp(48px,5vw,72px)/.9 var(--big);font-weight:400;text-transform:uppercase;margin:0}
+.mside p{margin:0;max-width:44ch}
+.mside .pr{font:44px/1 var(--big);color:var(--o2)}
+.merch .buy{background:var(--k);color:var(--p);height:52px;padding:0 26px}
+.merch .buy:hover{background:var(--o);color:var(--k)}
+@media(max-width:860px){.mgrid{grid-template-columns:1fr}.tee{max-height:none;max-width:520px}}
+
+/* ---------- faq ---------- */
+.faq{padding-block:100px}
+.faq details{border-top:1px solid #3a342e}
+.faq details:last-child{border-bottom:1px solid #3a342e}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;align-items:center;padding:24px 0;font:clamp(24px,3vw,36px)/1 var(--big);text-transform:uppercase}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:300 34px/1 var(--t);color:var(--o);transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 26px;color:var(--c2);max-width:62ch}
+
+/* ---------- footer ---------- */
+footer{background:var(--o);color:var(--k);padding-block:80px 40px}
+footer .fw{width:100%;height:auto;display:block}
+.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;margin-top:50px;border-top:2px solid var(--k);padding-top:24px}
+.fgrid b{display:block;font:600 12px var(--t);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
+.fgrid p{margin:0;font-size:15px}
+.news{display:flex;gap:8px;margin-top:6px}
+.news input{flex:1;min-width:0;height:46px;border-radius:999px;border:0;padding:0 18px;font:500 15px var(--t);background:var(--p);color:var(--k)}
+.news button{height:46px;padding:0 18px;border-radius:999px;border:0;background:var(--k);color:var(--o);font:600 12px var(--t);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.fine{margin-top:40px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px}
+@media(max-width:760px){.fgrid{grid-template-columns:1fr}}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,calc(100% + 40px));visibility:hidden;background:var(--c);color:var(--k);padding:14px 20px;border-radius:14px;font-weight:500;z-index:80;transition:transform .35s;max-width:calc(100% - 32px);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.toast.on{transform:translate(-50%,0);visibility:visible}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media (prefers-reduced-motion:reduce){.tick div{animation:none}.act.on::before,.actcard.playing .disc{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav id="nav" aria-label="Pagrindinis">
+  <svg class="logo" id="navlogo" viewBox="0 0 100 27" aria-label="TAMSA" role="img"></svg>
+  <div class="links"><a href="#atlikejai">Atlikėjai</a><a href="#programa">Programa</a><a href="#zemelapis">Žemėlapis</a><a href="#atributika">Atributika</a></div>
+  <button class="snd" id="snd" type="button" aria-pressed="false" aria-label="Garsas"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl np" id="np">Įjungti garsą</span></button>
+  <a class="buy" href="#bilietai">Bilietai</a>
+</nav>
+
+<header class="hero grain" id="hero">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <svg class="bld" id="bld" viewBox="0 0 720 640" preserveAspectRatio="xMinYMax meet" aria-hidden="true">
+    <path fill="#0d0c0b" d="M95 330 L430 452 L430 572 L95 572Z"/>
+    <path fill="#2233c4" d="M95 196 L706 446 L706 470 L95 300Z"/>
+    <path fill="#16208a" d="M95 300 L706 470 L706 492 L95 342Z"/>
+    <path fill="#2233c4" d="M0 40 H95 V640 H0Z"/>
+    <path fill="#2233c4" d="M430 452 h26 V572 h-26Z M492 470 h22 V572 h-22Z M548 486 h22 V572 h-22Z M604 500 h22 V572 h-22Z"/>
+    <path fill="#2233c4" d="M0 566 H660 L612 604 H0Z"/>
+    <g fill="none" stroke="#f3e6cc" stroke-linecap="round">
+      <path d="M-4 596 Q210 598 470 632" stroke-width="7"/>
+      <path d="M-4 612 Q170 616 330 646" stroke-width="6"/>
+      <path d="M-4 626 Q120 630 220 650" stroke-width="5"/>
+    </g>
+  </svg>
+  <svg class="tower" id="tower" viewBox="0 0 60 92" aria-hidden="true">
+    <path d="M30 2v14" stroke="#f3e6cc" stroke-width="2"/><path d="M31 3h12l-3 4 3 4H31z" fill="#ff4b14"/>
+    <path fill="#f3e6cc" d="M8 18h44v6h-3v62H11V24H8z"/>
+    <path fill="#0d0c0b" d="M8 18h5v4H8zM17.5 18h5v4h-5zM27 18h6v4h-6zM37.5 18h5v4h-5zM47 18h5v4h-5z"/>
+    <path fill="#16208a" d="M16 34h5v9h-5zM27.5 34h5v9h-5zM39 34h5v9h-5zM16 54h5v9h-5zM27.5 54h5v9h-5zM39 54h5v9h-5zM26 72h8v14h-8z"/>
+    <path fill="#c9bca4" d="M11 30h38v2H11zM11 48h38v2H11zM11 67h38v2H11z"/>
+  </svg>
+  <svg class="wm" id="wm" role="img" aria-label="TAMSA"></svg>
+  <div class="sub" id="sub"><span class="caps">Muzikos festivalis</span><span class="caps">Vilnius</span><span class="caps mdate">2027 m. liepos 16–17 d.</span></div>
+  <div class="foot">
+    <span class="hint" id="hint">Judinkite pelę: šviesa seka jus</span>
+    <span class="caps">2027 m. liepos 16–17 d.</span>
+    <a class="buy" href="#bilietai">Bilietai nuo 45 €</a>
+  </div>
+</header>
+
+<div class="tick" aria-hidden="true"><div id="tick"></div></div>
+
+<main>
+<section class="wrap intro" aria-labelledby="ih">
+  <h2 class="big" id="ih">Kai saulė nusileidžia, <em>prasideda tamsa.</em></h2>
+  <div>
+    <p>Dvi naktys prie Neries, trys scenos ir 24 atlikėjai. Pagrindinė scena įsikurs modernistinių rūmų salėje, kita – ant upės kranto, o trečia rūsyje, kur groja iki ryto.</p>
+    <div class="cd" role="timer" aria-label="Iki festivalio liko"><div><b id="cdD">000</b><span>dienų</span></div><div><b id="cdH">00</b><span>val.</span></div><div><b id="cdM">00</b><span>min.</span></div><div><b id="cdS">00</b><span>sek.</span></div></div>
+  </div>
+</section>
+
+<section class="lineup" id="atlikejai" aria-labelledby="lh">
+  <div class="wrap">
+    <div class="lhead"><h2 class="big" id="lh">Atlikėjai</h2>
+      <div class="days" role="group" aria-label="Diena"><button type="button" data-d="0" aria-pressed="true">Penktadienis 16</button><button type="button" data-d="1" aria-pressed="false">Šeštadienis 17</button></div></div>
+    <div class="acts" id="acts"></div>
+    <div class="actcard" id="actcard" aria-live="polite"><div class="disc" aria-hidden="true"></div><div><b id="acN">Paspauskite atlikėją</b><small id="acI">Kiekvienas atlikėjas turi savo garso eskizą, sukurtą naršyklėje.</small></div><button class="buy" type="button" id="acPlay">Klausyti</button></div>
+    <p class="lnote">Atlikėjai išgalvoti. Garso eskizai generuojami jūsų naršyklėje realiu laiku.</p>
+  </div>
+</section>
+
+<section class="prog" id="programa" aria-labelledby="ph">
+  <div class="wrap">
+    <div class="lhead"><h2 class="big" id="ph">Programa</h2>
+      <div class="days" role="group" aria-label="Diena"><button type="button" data-d="0" aria-pressed="true">Penktadienis 16</button><button type="button" data-d="1" aria-pressed="false">Šeštadienis 17</button></div></div>
+    <div class="tt" id="tt" tabindex="0" aria-label="Programos lentelė, slinkite į šoną"></div>
+    <div class="plan">
+      <div><h3>Mano tamsa</h3><p>Pažymėkite pasirodymus ir susidarykite savo planą. Jei du pasirodymai sutampa, juos pažymėsime mėlynai.</p></div>
+      <ol id="myplan"></ol>
+    </div>
+  </div>
+</section>
+
+<section class="map grain" id="zemelapis" aria-labelledby="mh">
+  <div class="wrap">
+    <div class="lhead"><h2 class="big" id="mh">Žemėlapis</h2><span class="caps">Prie Neries · Vilnius</span></div>
+    <div class="mapbox">
+      <svg class="mapsvg" id="mapsvg" viewBox="0 0 800 560" role="group" aria-label="Festivalio teritorijos žemėlapis"></svg>
+      <div class="minfo"><span class="caps" id="miK">Scena 1</span><h3 id="miT">Rūmai</h3><p id="miP"></p><div class="legend" id="legend"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="tix" id="bilietai" aria-labelledby="th">
+  <div class="wrap">
+    <div class="lhead"><h2 class="big" id="th">Bilietai</h2><span class="caps">Koncepcinis projektas · bilietai neparduodami</span></div>
+    <div class="tixgrid">
+      <div>
+        <div class="opts" role="radiogroup" aria-label="Bilieto tipas" id="opts"></div>
+        <div class="field"><label for="tname">Vardas ant bilieto</label><input id="tname" maxlength="22" autocomplete="off" placeholder="Jūsų vardas"></div>
+        <div class="field"><label id="qlab">Kiekis</label><div class="qty" role="group" aria-labelledby="qlab"><button type="button" id="qm" aria-label="Mažiau">−</button><output id="qv">1</output><button type="button" id="qp" aria-label="Daugiau">+</button></div></div>
+        <div class="sum"><span class="caps">Iš viso</span><b id="tsum">75 €</b></div>
+      </div>
+      <div class="tixprev">
+        <div class="ticket" id="ticket">
+          <div class="main" id="tmain"></div>
+          <div class="stub" id="stub" role="button" tabindex="0" aria-label="Nuplėšti bilieto kuponą"><svg id="stublogo" viewBox="0 0 100 27" aria-hidden="true"></svg><div class="ln" aria-hidden="true"><i></i><i></i><i></i></div><span class="ty" id="sty">2 dienos</span><span class="no" id="sno">000001</span></div>
+        </div>
+        <div class="tear"><span>Patraukite kuponą žemyn arba į šoną, kad jį nuplėštumėte.</span><button class="buy" type="button" id="tbuy">Įsigyti</button></div>
+        <div class="msg" id="tmsg" role="status"><b>Bilietas nuplėštas.</b> Tai koncepcinis projektas, todėl bilietai neparduodami ir mokėjimas nevyksta.<br><button class="buy" type="button" id="tagain">Naujas bilietas</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="merch" id="atributika" aria-labelledby="mrh">
+  <div class="wrap">
+    <div class="lhead"><h2 class="big" id="mrh">Atributika</h2><span class="caps">Oficialūs marškinėliai</span></div>
+    <div class="mgrid">
+      <div class="tee" id="tee"><img data-v="front" class="on" src="img/tee-front.jpg" alt="Juodi TAMSA marškinėliai iš priekio su mažu logotipu"><img data-v="back" src="img/tee-back.jpg" alt="Marškinėlių nugara su saule, rūmais ir užrašu TAMSA" loading="lazy"><img data-v="side" src="img/tee-side.jpg" alt="Marškinėlių šonas su mėlyna juosta ir Gedimino bokštu" loading="lazy"></div>
+      <div class="mside">
+        <div class="seg" role="group" aria-label="Vaizdas" id="teeview"><button type="button" data-v="front" aria-pressed="true">Priekis</button><button type="button" data-v="back" aria-pressed="false">Nugara</button><button type="button" data-v="side" aria-pressed="false">Šonas</button></div>
+        <h3>Marškinėliai „Saulėlydis“</h3>
+        <p>Laisvo kirpimo, 240 g/m² medvilnė. Nugaroje didelis festivalio plakatas, ant rankovės Gedimino bokštas, šone mėlyna juosta.</p>
+        <div class="seg" role="group" aria-label="Dydis" id="sizes"><button type="button" aria-pressed="false">S</button><button type="button" aria-pressed="true">M</button><button type="button" aria-pressed="false">L</button><button type="button" aria-pressed="false">XL</button></div>
+        <div style="display:flex;align-items:center;gap:22px;flex-wrap:wrap"><span class="pr">35 €</span><button class="buy" type="button" id="teebuy">Į krepšelį</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap faq" aria-labelledby="fh">
+  <div class="lhead"><h2 class="big" id="fh">Klausimai</h2></div>
+  <details><summary>Nuo kelerių metų galima dalyvauti?</summary><p>Nuo 16 metų. Jaunesni nei 18 metų lankytojai įleidžiami tik su pilnamečiu palydovu, o į Požemio sceną patenka tik pilnamečiai.</p></details>
+  <details><summary>Ar galima grąžinti bilietą?</summary><p>Bilieto grąžinti negalima, tačiau iki liepos 1 d. jį galima nemokamai perrašyti kitam asmeniui.</p></details>
+  <details><summary>Kaip atvykti?</summary><p>Pėsčiomis nuo Katedros aikštės apie 15 minučių palei Nerį. Abiejų naktų pabaigoje kursuos papildomi naktiniai autobusai į centrą ir Antakalnį.</p></details>
+  <details><summary>Ar bus maisto ir vandens?</summary><p>Maisto kieme veiks 14 virtuvių, tarp jų veganiškų. Geriamojo vandens kolonėlės nemokamos, todėl atsineškite savo gertuvę.</p></details>
+  <details><summary>Kada baigiasi programa?</summary><p>Rūmų ir Krantinės scenos baigia apie vidurnaktį. Požemyje groja iki 5 valandos ryto.</p></details>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <svg class="fw" id="fwm" role="img" aria-label="TAMSA"></svg>
+    <div class="fgrid">
+      <div><b>Kada ir kur</b><p>2027 m. liepos 16–17 d.<br>Vilnius, prie Neries</p></div>
+      <div><b>Naujienlaiškis</b><p>Pirmieji sužinosite atlikėjus.</p><form class="news" id="news"><input type="email" required placeholder="El. paštas" aria-label="El. paštas"><button>Sekti</button></form></div>
+      <div><b>Apie projektą</b><p>TAMSA yra koncepcinis projektas: festivalis, atlikėjai ir bilietai išgalvoti. Dizainas ir svetainė: by-azuolas.</p></div>
+    </div>
+    <div class="fine"><span>© 2027 TAMSA · Koncepcinis projektas</span><span>Instagram: @by.azuolas</span></div>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const WM={"lamp":[1628.5,480],"hollow":[[1376.0,1760],[1881.08,1760]],"w":6566.6,"h":1760,"d":"M279.4 1760.0V338.0H24.4V0.0H963.8V338.0H708.8V1760.0Z M1058.8 1760.0 L1534.6 0.0 L1722.5 0.0 L2198.3 1760.0 L1881.1 1760.0 L1713.9 460.0 A85.4 70 0 0 0 1543.1 460.0 L1376.0 1760.0 Z M2364.0 1760.0V0.0H3018.0L3198.5 1073.0L3377.9 0.0H4037.9V1760.0H3645.0V492.0L3398.6 1760.0H3013.1L2752.0 492.0V1760.0Z M4772.2 1776.0Q4478.1 1776.0 4348.2 1656.0Q4218.3 1536.0 4218.3 1274.0V1102.0H4642.8V1322.0Q4642.8 1383.0 4665.4 1417.5Q4688.0 1452.0 4744.1 1452.0Q4802.7 1452.0 4825.2 1424.0Q4847.8 1396.0 4847.8 1332.0Q4847.8 1251.0 4828.3 1196.5Q4808.8 1142.0 4760.6 1092.5Q4712.4 1043.0 4627.0 977.0L4434.2 827.0Q4218.3 660.0 4218.3 445.0Q4218.3 220.0 4345.8 102.0Q4473.3 -16.0 4714.8 -16.0Q5010.1 -16.0 5133.9 113.0Q5257.7 242.0 5257.7 505.0H4821.0V384.0Q4821.0 348.0 4795.9 328.0Q4770.9 308.0 4728.2 308.0Q4677.0 308.0 4653.2 331.5Q4629.4 355.0 4629.4 392.0Q4629.4 429.0 4653.8 472.0Q4678.2 515.0 4750.2 571.0L4997.9 766.0Q5072.3 824.0 5134.5 888.5Q5196.7 953.0 5234.5 1038.5Q5272.4 1124.0 5272.4 1247.0Q5272.4 1495.0 5160.7 1635.5Q5049.1 1776.0 4772.2 1776.0Z M5390.5 1760.0 5597.9 0.0H6326.3L6530.0 1760.0H6123.8L6093.3 1476.0H5834.6L5807.8 1760.0ZM5865.1 1195.0H6060.3L5966.4 300.0H5946.9Z"};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),3200)}
+
+/* ---------- wordmarks ---------- */
+function wm(svg,fill,pad=0){svg.setAttribute('viewBox',`${-pad} ${-pad} ${WM.w+pad*2} ${WM.h+pad*2}`);svg.innerHTML=`<path fill="${fill}" d="${WM.d}"/>`}
+wm($('#wm'),'#f3e6cc');wm($('#fwm'),'#0d0c0b');wm($('#navlogo'),'#f3e6cc');wm($('#stublogo'),'#f3e6cc');
+$('#tick').innerHTML=Array(2).fill(['Liepos 16–17','2 naktys','3 scenos','24 atlikėjai','Prie Neries','Iki 5 ryto'].map(t=>`<span>${t}</span>`).join('')).join('');
+
+/* ---------- data ---------- */
+const STAGES=[{id:0,n:'Rūmai',s:'Didžioji salė'},{id:1,n:'Krantinė',s:'Prie upės'},{id:2,n:'Požemis',s:'Iki ryto'}];
+const G={techno:'Technas',synth:'Sintpopas',dream:'Svajonių popsas',alt:'Alternatyva',house:'Hausas',amb:'Ambientas',post:'Postpankas',jazz:'Elektroninis džiazas'};
+// [name, genre, tier, stage, start(h from 17:00), dur(h)]
+const ACTS=[
+ [['Vilko valanda','synth',1,0,6.75,1.5],['Mėnulio kombinatas','post',1,0,5,1.25],['Naktinė pamaina','techno',1,2,9,2],
+  ['Sidabrinis rūkas','dream',2,1,4,1],['Kobaltas','house',2,2,7,2],['Audra','alt',2,0,3.5,1],['Lėtas traukinys','jazz',2,1,5.5,1],
+  ['Žaibo klubas','techno',3,2,5,2],['Rasos','dream',3,1,2.5,1],['Pusiaunaktis','amb',3,1,1,1],['Antakalnio orkestras','jazz',3,0,2,1],['Šešėlių teatras','synth',3,2,11,1]],
+ [['Betono sodas','post',1,0,6.75,1.5],['Mėlyna valanda','synth',1,1,5.5,1.25],['Saulėlydžio direkcija','house',1,2,9,2],
+  ['Varis','alt',2,0,5,1.25],['Neoninė giria','techno',2,2,7,2],['Trys tiltai','dream',2,1,4,1],['Šaltas frontas','synth',2,0,3.5,1],
+  ['Kibirkštis','techno',3,2,5,2],['Vėlyvas autobusas','post',3,1,2.5,1],['Smėlio laikrodis','amb',3,1,1,1],['Orbita','house',3,0,2,1],['Paparčio žiedas','amb',3,2,11,1]]
+].map((day,d)=>day.map((a,i)=>({id:d*100+i,d,n:a[0],g:a[1],tier:a[2],st:a[3],s:a[4],e:a[4]+a[5]})));
+const ALL=ACTS.flat();
+const hh=x=>{const m=Math.round((17+x)*60)%(24*60);return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+const DAYN=['Penktadienis','Šeštadienis'];
+
+/* =====================================================================
+   AUDIO — tiny Web Audio groovebox; every act gets its own seeded sketch
+   ===================================================================== */
+const AU={ctx:null,on:false,cur:null,timer:0,step:0,next:0,amp:0,kickHit:0};
+function rng(seed){let s=seed>>>0||1;return()=>((s=Math.imul(s^s>>>15,1|s),s^=s+Math.imul(s^s>>>7,61|s),((s^s>>>14)>>>0)/4294967296))}
+function hash(str){let h=2166136261;for(const c of str)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0}
+const SCALES={min:[0,2,3,5,7,8,10],dor:[0,2,3,5,7,9,10],phr:[0,1,3,5,7,8,10],maj:[0,2,4,5,7,9,11]};
+const TPL={
+ techno:{bpm:[128,134],sc:'phr',k:'x...x...x...x...',h:'..x...x...x...x.',c:'....x.......x...',wave:'sawtooth',cut:[500,900],dens:.55,pad:0,lead:.15},
+ house:{bpm:[120,124],sc:'dor',k:'x...x...x...x...',h:'..x...x...x...x.',c:'....x.......x...',wave:'square',cut:[900,1600],dens:.5,pad:1,lead:.3},
+ synth:{bpm:[108,116],sc:'min',k:'x.......x.......',h:'x.x.x.x.x.x.x.x.',c:'....x.......x...',wave:'sawtooth',cut:[1400,2400],dens:.35,pad:1,lead:.55},
+ dream:{bpm:[84,92],sc:'maj',k:'x.........x.....',h:'....x.......x...',c:'................',wave:'triangle',cut:[1800,3000],dens:.25,pad:1,lead:.5},
+ alt:{bpm:[100,112],sc:'dor',k:'x.....x.x.......',h:'x.x.x.x.x.x.x.x.',c:'....x.......x...',wave:'square',cut:[1200,2000],dens:.45,pad:0,lead:.4},
+ post:{bpm:[138,150],sc:'min',k:'x...x...x...x...',h:'xxxxxxxxxxxxxxxx',c:'....x.......x...',wave:'sawtooth',cut:[1000,1800],dens:.8,pad:0,lead:.25},
+ amb:{bpm:[70,78],sc:'maj',k:'................',h:'................',c:'................',wave:'sine',cut:[2000,3000],dens:.12,pad:1,lead:.35},
+ jazz:{bpm:[92,100],sc:'dor',k:'x.....x...x.....',h:'x..x..x.x..x..x.',c:'....x.......x..x',wave:'triangle',cut:[1300,2200],dens:.4,pad:1,lead:.45}};
+function preset(name,g){const T=TPL[g],r=rng(hash(name)),sc=SCALES[T.sc],root=36+Math.floor(r()*7);
+  const bass=[...Array(16)].map((_,i)=>(T.k[i]==='x'&&r()<.3)||r()<T.dens?sc[Math.floor(r()*4)%sc.length]+(r()<.15?12:0):null);
+  const lead=[...Array(16)].map(()=>r()<T.lead?sc[Math.floor(r()*sc.length)]+12*(1+Math.floor(r()*2)):null);
+  const chords=[0,5,3,4].map(()=>Math.floor(r()*sc.length));
+  return{name,bpm:T.bpm[0]+r()*(T.bpm[1]-T.bpm[0]),sc,root,k:T.k,h:T.h,c:T.c,wave:T.wave,cut:T.cut[0]+r()*(T.cut[1]-T.cut[0]),bass,lead,chords,pad:T.pad}}
+const HOUSE=Object.assign(preset('TAMSA','house'),{name:'TAMSA',bpm:122,root:38,sc:SCALES.dor,pad:1,chords:[0,5,3,4]});
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+function auInit(){if(AU.ctx)return;const C=AU.ctx=new (window.AudioContext||window.webkitAudioContext)();
+  AU.out=C.createGain();AU.out.gain.value=.8;const comp=C.createDynamicsCompressor();comp.threshold.value=-16;comp.ratio.value=4;
+  AU.an=C.createAnalyser();AU.an.fftSize=256;AU.an.smoothingTimeConstant=.6;AU.fd=new Uint8Array(AU.an.frequencyBinCount);
+  AU.out.connect(comp);comp.connect(AU.an);AU.an.connect(C.destination);
+  const len=C.sampleRate*2.2,ir=C.createBuffer(2,len,C.sampleRate);for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}
+  AU.rev=C.createConvolver();AU.rev.buffer=ir;AU.send=C.createGain();AU.send.gain.value=.32;AU.send.connect(AU.rev);AU.rev.connect(AU.out);
+  const nb=C.createBuffer(1,C.sampleRate,C.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;AU.noise=nb}
+function env(g,t,a,v,d){g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(0.0001,t+a+d)}
+function kick(t){const C=AU.ctx,o=C.createOscillator(),g=C.createGain();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(42,t+.13);env(g,t,.003,1,.42);o.connect(g);g.connect(AU.out);o.start(t);o.stop(t+.5)}
+function nz(t,type,f,v,d,q=1,send=0){const C=AU.ctx,s=C.createBufferSource(),fl=C.createBiquadFilter(),g=C.createGain();s.buffer=AU.noise;fl.type=type;fl.frequency.value=f;fl.Q.value=q;env(g,t,.002,v,d);s.connect(fl);fl.connect(g);g.connect(AU.out);if(send)g.connect(AU.send);s.start(t,Math.random()*.5);s.stop(t+d+.05)}
+function tone(t,f,d,wave,v,cut,send=0,res=6){const C=AU.ctx,o=C.createOscillator(),fl=C.createBiquadFilter(),g=C.createGain();o.type=wave;o.frequency.value=f;fl.type='lowpass';fl.Q.value=res;
+  fl.frequency.setValueAtTime(cut*2.2,t);fl.frequency.exponentialRampToValueAtTime(Math.max(120,cut*.5),t+d);env(g,t,.006,v,d);o.connect(fl);fl.connect(g);g.connect(AU.out);if(send)g.connect(AU.send);o.start(t);o.stop(t+d+.1)}
+function pad(t,notes,d){const C=AU.ctx;notes.forEach(n=>[-7,7].forEach(dt=>{const o=C.createOscillator(),fl=C.createBiquadFilter(),g=C.createGain();o.type='sawtooth';o.frequency.value=mtof(n);o.detune.value=dt;fl.type='lowpass';fl.frequency.value=900;
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(.035,t+d*.35);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(fl);fl.connect(g);g.connect(AU.send);g.connect(AU.out);o.start(t);o.stop(t+d+.1)}))}
+function deg(P,dg){const n=P.sc.length;return P.root+P.sc[((dg%n)+n)%n]+12*Math.floor(dg/n)}
+function sched(){const C=AU.ctx,P=AU.cur;if(!P)return;const sp=60/P.bpm/4;
+  while(AU.next<C.currentTime+.12){const t=AU.next,i=AU.step%16,bar=Math.floor(AU.step/16);
+    if(P.k[i]==='x'){kick(t);AU.kickAt=t}
+    if(P.h[i]==='x')nz(t,'highpass',7500,.16,i%4===2?.12:.04);
+    if(P.c[i]==='x')nz(t,'bandpass',1600,.42,.16,1.2,1);
+    if(P.bass[i]!=null)tone(t,mtof(P.root+P.bass[i]),sp*1.6,P.wave==='sine'?'triangle':'sawtooth',.34,P.cut*.5);
+    if(P.lead[i]!=null&&bar%2===1)tone(t,mtof(P.root+12+P.lead[i]),sp*2.4,P.wave,.11,P.cut,1,3);
+    if(P.pad&&i===0){const c=P.chords[bar%4];pad(t,[deg(P,c)+12,deg(P,c+2)+12,deg(P,c+4)+12],sp*16)}
+    AU.next+=sp*(i%2?.94:1.06);AU.step++}}
+function play(P){auInit();AU.ctx.resume();AU.cur=P;AU.step=0;AU.next=AU.ctx.currentTime+.06;AU.on=true;clearInterval(AU.timer);AU.timer=setInterval(sched,25);sched();uiSound()}
+function stop(){AU.on=false;clearInterval(AU.timer);if(AU.ctx)AU.ctx.suspend();uiSound()}
+function uiSound(){const b=$('#snd');b.setAttribute('aria-pressed',AU.on);$('#np').textContent=AU.on?(AU.cur.name==='TAMSA'?'Groja: TAMSA':AU.cur.name):'Įjungti garsą';
+  $$('.act').forEach(a=>a.classList.toggle('on',AU.on&&AU.cur&&+a.dataset.id===AU.cur.id));
+  $('#actcard').classList.toggle('playing',AU.on&&AU.cur&&AU.cur.id!=null);$('#acPlay').textContent=AU.on&&AU.cur&&AU.cur.id===SEL?.id?'Sustabdyti':'Klausyti';kick2()}
+$('#snd').onclick=()=>AU.on?stop():play(AU.cur&&AU.cur.id!=null?AU.cur:HOUSE);
+const eqs=$$('.snd .eq i');
+function audioFrame(){if(!AU.on||!AU.an){AU.amp*=.9;eqs.forEach(e=>e.style.transform='scaleY(.2)');return}
+  AU.an.getByteFrequencyData(AU.fd);let lo=0;for(let i=1;i<6;i++)lo+=AU.fd[i];lo/=5*255;AU.amp+=(lo-AU.amp)*.35;
+  eqs.forEach((e,i)=>e.style.transform=`scaleY(${(.15+AU.fd[2+i*7]/255*.85).toFixed(2)})`)}
+
+/* =====================================================================
+   HERO — one fragment shader: halftone sun + waves, hill foliage, beam
+   ===================================================================== */
+const hero=$('#hero'),cv=$('#gl');let gl=null,U={},HV=true,W=0,H=0,DPR=1;
+const S={cx:0,cy:0,r:0,lx:0,ly:0,ang:0,ta:0,px:null,hx:0,hy:0,hw:0,dark:0,beamK:1};
+const FS=`precision highp float;
+uniform vec2 uR;uniform float uD,uT,uA,uAmp,uDark,uK;uniform vec3 uS;uniform vec2 uL;uniform vec3 uH;
+float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+1.),f.x),f.y);}
+float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<4;i++){s+=a*n2(p);p*=2.03;a*=.5;}return s;}
+mat2 R2(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+float hillY(float x){float d=x-uH.x;float l=uH.y+uH.z*smoothstep(0.,1.,clamp(-d/(uH.z*3.2),0.,1.));float r=uH.y+uH.z*.22*smoothstep(0.,1.,clamp(d/(uH.z*2.5),0.,1.));
+  float y=d<0.?l:r;y-=smoothstep(uH.z*.12,uH.z*.5,abs(d))*(fbm(vec2(x*.018,3.))-.5)*uH.z*.35;return y;}
+float waves(vec2 c){vec2 q=(c-uS.xy)/uS.z;float a=1.+uAmp*2.6;
+  float b=sin(q.y*8.4+.55*a*sin(q.x*2.6+uT*.55)+.22*a*sin(q.x*6.3-uT*.9)+.6*fbm(q*2.+uT*.05));
+  float w=smoothstep(-.05,.95,b)*smoothstep(-.75,.15,q.y);w*=.55+.45*smoothstep(-.6,.8,q.x+q.y*.3);return clamp(w+uDark*.35,0.,1.);}
+float beam(vec2 c){vec2 r=c-uL;vec2 dir=vec2(sin(uA),cos(uA));float al=dot(r,dir);float pe=dot(r,vec2(dir.y,-dir.x));
+  float hw=al*.165+3.;float cone=smoothstep(hw,hw*.86,abs(pe))*smoothstep(0.,6.,al);float fall=pow(clamp(1.-al/(uR.y*1.05),0.,1.),.85);return cone*fall*uK;}
+float bedge(vec2 c){vec2 r=c-uL;vec2 dir=vec2(sin(uA),cos(uA));float al=dot(r,dir);float pe=dot(r,vec2(dir.y,-dir.x));float hw=al*.165+3.;return smoothstep(hw+.8,hw-.8,abs(pe))*step(0.,al);}
+void main(){vec2 p=vec2(gl_FragCoord.x,uR.y*uD-gl_FragCoord.y)/uD;vec3 K=vec3(.051,.047,.043),O=vec3(1.,.294,.078),C=vec3(.953,.902,.8),B=vec3(.133,.2,.769);
+  vec3 col=K;float aa=.9;
+  // sun
+  float sd=length(p-uS.xy)-uS.z;
+  if(sd<2.){float cell=6.5;vec2 q=R2(.785)*p/cell;vec2 cc=(floor(q)+.5);vec2 cp=R2(-.785)*cc*cell;float w=waves(cp);
+    float rr=sqrt(w)*cell*.66;float dd=length(q-cc)*cell;float dotc=smoothstep(rr+aa,rr-aa,dd);
+    vec3 sun=mix(O,O*.78,uDark);sun=mix(sun,K,dotc*.92);col=mix(col,sun,smoothstep(1.,-1.,sd));}
+  // hill + foliage
+  float hy=hillY(p.x);
+  if(p.y>hy-1.){float inside=smoothstep(hy-1.,hy+1.,p.y);float cell=5.;vec2 q=R2(.3)*p/cell;vec2 cc=floor(q)+.5;vec2 cp=R2(-.3)*cc*cell;
+    float dep=(cp.y-hillY(cp.x))/(uH.z*1.4);float f=fbm(cp*.016)+fbm(cp*.05)*.45;float v=clamp((f-.62+dep*.55)*1.9,0.,1.);
+    float rr=sqrt(v)*cell*.7;float dd=length(q-cc)*cell;float dotc=smoothstep(rr+aa,rr-aa,dd);col=mix(col,mix(K,B,dotc),inside);}
+  // beam
+  float bp=beam(p);
+  if(bp>.002){float cell=5.;vec2 q=R2(.26)*p/cell;vec2 cc=floor(q)+.5;vec2 cp=R2(-.26)*cc*cell;float v=beam(cp);
+    float rr=sqrt(v)*cell*.78;float dd=length(q-cc)*cell;float dotc=smoothstep(rr+aa,rr-aa,dd);float solid=smoothstep(.62,.9,bp);
+    float edge=bedge(p);col=mix(col,C,max(dotc*edge,solid)*.97);}
+  // paper grain
+  col+=(h21(floor(p*uD)+fract(uT*.0))-.5)*.035;
+  gl_FragColor=vec4(col,1.);}`;
+function glInit(){try{gl=cv.getContext('webgl',{antialias:false,alpha:false,powerPreference:'high-performance'})}catch(e){}if(!gl)return false;
+  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o};
+  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);gl.useProgram(pr);
+  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const l=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);
+  ['uR','uD','uT','uA','uAmp','uDark','uK','uS','uL','uH'].forEach(n=>U[n]=gl.getUniformLocation(pr,n));return true}
+function layout(){const r=hero.getBoundingClientRect();W=r.width;H=r.height;DPR=window.LOWQ?1:Math.min(devicePixelRatio||1,W<700?2:1.6);
+  cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);if(gl)gl.viewport(0,0,cv.width,cv.height);
+  const wmR=$('#wm').getBoundingClientRect(),hr=hero.getBoundingClientRect(),sc=wmR.width/WM.w;
+  S.lx=wmR.left-hr.left+WM.lamp[0]*sc;S.ly=wmR.top-hr.top+WM.lamp[1]*sc;
+  const sub=$('#sub');sub.style.right=(hr.right-wmR.right)+'px';sub.style.top=(wmR.bottom-hr.top+Math.max(14,wmR.height*.07))+'px';
+  const mob=W<700;S.r=mob?W*.5:Math.min(W*.27,H*.36);S.cx=mob?W*.6:W*.6;S.cy0=mob?H*.62:Math.max(wmR.bottom-hr.top+S.r*.78,H*.6);
+  S.hw=mob?H*.11:H*.12;S.hx=S.cx+S.r*(mob?.5:.66);S.hy=S.cy0+S.r*(mob?.42:.5);
+  const t=$('#tower');t.style.left=S.hx+'px';t.style.top=S.hy+'px';kick2()}
+function hillY(x){const d=x-S.hx,sm=v=>{v=Math.min(1,Math.max(0,v));return v*v*(3-2*v)};return d<0?S.hy+S.hw*sm(-d/(S.hw*3.2)):S.hy+S.hw*.22*sm(d/(S.hw*2.5))}
+hero.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){const r=hero.getBoundingClientRect();S.px=[e.clientX-r.left,e.clientY-r.top];$('#hint').style.opacity=0}});
+hero.addEventListener('pointerleave',()=>S.px=null);
+let lastT=performance.now(),T0=lastT,running=false,FT=[],QDONE=false;
+function frame(now){running=false;const dt=Math.min(.05,(now-lastT)/1000);lastT=now;const t=(now-T0)/1000;
+  audioFrame();
+  if(HV&&gl){const sy=Math.max(0,scrollY),pr=Math.min(1,sy/H);S.dark=pr;S.cy=S.cy0+S.r*.45*pr;
+    if(S.px){S.ta=Math.atan2(S.px[0]-S.lx,S.px[1]-S.ly);}else S.ta=RM?.12:Math.sin(t*.42)*.42+Math.sin(t*.17)*.12;
+    S.ta=Math.max(-1.05,Math.min(1.05,S.ta));S.ang+=(S.ta-S.ang)*Math.min(1,dt*(S.px?7:3));
+    const ka=AU.on&&AU.kickAt?Math.max(0,1-(AU.ctx.currentTime-AU.kickAt)/.18):0;S.beamK=1+ka*.12;
+    gl.uniform2f(U.uR,W,H);gl.uniform1f(U.uD,DPR);gl.uniform1f(U.uT,RM?0:t);gl.uniform1f(U.uA,S.ang);gl.uniform1f(U.uAmp,AU.amp);gl.uniform1f(U.uDark,S.dark);gl.uniform1f(U.uK,S.beamK);
+    gl.uniform3f(U.uS,S.cx,S.cy,S.r);gl.uniform2f(U.uL,S.lx,S.ly);gl.uniform3f(U.uH,S.hx,S.hy+S.r*.45*pr,S.hw);gl.drawArrays(gl.TRIANGLES,0,3);
+    if(!QDONE){FT.push(dt);if(FT.length>=50){QDONE=true;const avg=FT.slice(10).reduce((a,b)=>a+b,0)/40;if(avg>.024&&DPR>1){window.LOWQ=true;DPR=1;cv.width=Math.round(W);cv.height=Math.round(H);gl.viewport(0,0,cv.width,cv.height)}}}
+    $('#tower').style.transform=`translate(-50%,-92%) translateY(${(S.r*.45*pr).toFixed(1)}px)`;}
+  if((HV&&gl)||AU.on)kick2()}
+function kick2(){if(!running){running=true;requestAnimationFrame(frame)}}
+if(!glInit()){cv.style.background='radial-gradient(circle at 60% 64%,#ff4b14 0 27%,transparent 27.2%)'}
+new IntersectionObserver(es=>{HV=es[0].isIntersecting;kick2()}).observe(hero);
+addEventListener('scroll',()=>{$('#nav').classList.toggle('solid',scrollY>innerHeight*.6)},{passive:true});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{layout();if(typeof buildTT==='function'&&MOBT()!==ttMode){ttMode=MOBT();buildTT()}},80)});
+document.fonts&&document.fonts.ready.then(layout);layout();
+
+/* ---------- countdown ---------- */
+const FEST=Date.UTC(2027,6,16,15,0,0);
+function cd(){let s=Math.max(0,Math.floor((FEST-Date.now())/1000));const d=Math.floor(s/86400);s%=86400;
+  $('#cdD').textContent=d;$('#cdH').textContent=String(Math.floor(s/3600)).padStart(2,'0');$('#cdM').textContent=String(Math.floor(s%3600/60)).padStart(2,'0');$('#cdS').textContent=String(s%60).padStart(2,'0')}
+cd();setInterval(cd,1000);
+
+/* ---------- lineup ---------- */
+let LD=0,SEL=null;
+function buildActs(){const day=ACTS[LD];let h='';[1,2,3].forEach(t=>{day.filter(a=>a.tier===t).forEach(a=>h+=`<button type="button" class="act t${t}" data-id="${a.id}">${a.n}</button>`);h+='<span class="tier"></span>'});
+  $('#acts').innerHTML=h;$$('.act').forEach(b=>b.onclick=()=>pick(ALL.find(a=>a.id===+b.dataset.id),true));uiSound()}
+function pick(a,go){SEL=a;$('#acN').textContent=a.n;$('#acI').textContent=`${G[a.g]} · ${STAGES[a.st].n} · ${DAYN[a.d]} ${hh(a.s)}`;
+  if(go){if(AU.on&&AU.cur&&AU.cur.id===a.id){stop();return}const P=preset(a.n,a.g);P.id=a.id;play(P)}else uiSound()}
+$('#acPlay').onclick=()=>{if(!SEL){pick(ACTS[LD][0],true);return}pick(SEL,true)};
+$$('#atlikejai .days button').forEach(b=>b.onclick=()=>{LD=+b.dataset.d;$$('#atlikejai .days button').forEach(x=>x.setAttribute('aria-pressed',x===b));buildActs()});
+buildActs();
+
+/* ---------- programme ---------- */
+let PD=0,MY=new Set(store.get('tamsa-plan',[]));
+function overl(a,b){return a.d===b.d&&a.s<b.e&&b.s<a.e}
+const MOBT=()=>innerWidth<700;let ttMode=MOBT();
+function buildTT(){const H0=0,H1=12,span=H1-H0,acts=ACTS[PD];
+  const clashOf=a=>MY.has(a.id)&&[...MY].some(o=>o!==a.id&&overl(a,ALL.find(x=>x.id===o)));
+  if(MOBT()){$('#tt').innerHTML='<div class="tlist">'+STAGES.map(st=>`<div class="tst"><b>${st.n}</b><small>${st.s}</small></div>`+acts.filter(a=>a.st===st.id).sort((x,y)=>x.s-y.s).map(a=>`<button type="button" class="slot tl${clashOf(a)?' clash':''}" data-id="${a.id}" aria-pressed="${MY.has(a.id)}"><small>${hh(a.s)}–${hh(a.e)}</small><b>${a.n}</b><span class="st" aria-hidden="true"></span></button>`).join('')).join('')+'</div>'}
+  else{
+  let h=`<div class="grid"><div class="hours" style="grid-template-columns:repeat(${span},1fr)">${[...Array(span)].map((_,i)=>`<span>${hh(i)}</span>`).join('')}</div>`;
+  STAGES.forEach(st=>{h+=`<div class="row"><div class="stg"><b>${st.n}</b><small>${st.s}</small></div><div class="trk">`+acts.filter(a=>a.st===st.id).map(a=>{
+    const mine=MY.has(a.id),clash=mine&&[...MY].some(o=>o!==a.id&&overl(a,ALL.find(x=>x.id===o)));
+    return `<button type="button" class="slot${clash?' clash':''}" data-id="${a.id}" aria-pressed="${mine}" style="left:${(a.s-H0)/span*100}%;width:calc(${(a.e-a.s)/span*100}% - 4px)"><b>${a.n}</b><small>${hh(a.s)}–${hh(a.e)}</small><span class="st" aria-hidden="true"></span></button>`}).join('')+'</div></div>'});
+  $('#tt').innerHTML=h+'</div>';}
+  $$('.slot').forEach(b=>b.onclick=()=>{const id=+b.dataset.id;MY.has(id)?MY.delete(id):MY.add(id);store.set('tamsa-plan',[...MY]);buildTT()});
+  const L=[...MY].map(id=>ALL.find(a=>a.id===id)).filter(Boolean).sort((a,b)=>a.d-b.d||a.s-b.s);
+  $('#myplan').innerHTML=L.length?L.map(a=>{const c=L.some(o=>o!==a&&overl(a,o));return `<li><span>${['Pn.','Št.'][a.d]} ${hh(a.s)}</span><span>${a.n} · ${STAGES[a.st].n}</span>${c?'<span class="w">Sutampa</span>':'<span></span>'}</li>`}).join(''):'<li class="empty">Kol kas tuščia. Paspauskite pasirodymą lentelėje.</li>'}
+$$('#programa .days button').forEach(b=>b.onclick=()=>{PD=+b.dataset.d;$$('#programa .days button').forEach(x=>x.setAttribute('aria-pressed',x===b));buildTT()});
+buildTT();
+
+/* ---------- map ---------- */
+const PINS=[{k:'Scena 1',t:'Rūmai',x:300,y:262,p:'Pagrindinė scena modernistinių rūmų salėje, 4 000 vietų. Čia groja visi pagrindiniai atlikėjai.'},
+ {k:'Scena 2',t:'Krantinė',x:560,y:350,p:'Atvira scena ant Neries kranto. Saulėlydis 21:47, todėl pirmieji koncertai vyksta dar šviesoje.'},
+ {k:'Scena 3',t:'Požemis',x:190,y:150,p:'Rūmų rūsys su technu ir hausu iki 5 ryto. Įėjimas tik pilnamečiams.'},
+ {k:'Maistas',t:'Maisto kiemas',x:430,y:170,p:'14 virtuvių, tarp jų veganiškos, ir nemokamos vandens kolonėlės.'},
+ {k:'Įėjimas',t:'Pagrindiniai vartai',x:640,y:120,p:'Bilietų patikra ir apyrankės. Atidaroma 16:00.'},
+ {k:'Ramybė',t:'Tylos pieva',x:105,y:345,p:'Gultai, šešėlis ir jokio garso. Pailsėti tarp koncertų.'}];
+function buildMap(){const s=$('#mapsvg');let h=`<defs><pattern id="hd" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="4.5" cy="4.5" r="2.4" fill="#2233c4"/></pattern></defs>
+  <rect width="800" height="560" fill="#16208a"/><rect width="800" height="560" fill="url(#hd)" opacity=".5"/>
+  <path d="M0 420 C160 380 260 470 420 450 S690 380 800 410 V560 H0Z" fill="#0d0c0b"/>
+  ${[0,1,2,3].map(i=>`<path d="M${-20+i*30} ${452+i*22} C160 ${412+i*22} 260 ${502+i*22} 420 ${482+i*22} S690 ${412+i*22} 820 ${442+i*22}" fill="none" stroke="#f3e6cc" stroke-width="3" opacity="${.85-i*.18}"/>`).join('')}
+  <text x="420" y="545" fill="#f3e6cc" font-family="Jost,sans-serif" font-size="13" letter-spacing="5" text-anchor="middle">NERIS</text>
+  <path d="M220 230 L420 290 L420 330 L220 330Z" fill="#2233c4" stroke="#0d0c0b" stroke-width="3"/><path d="M220 210 L440 278 L440 292 L220 228Z" fill="#f3e6cc"/>
+  <rect x="380" y="140" width="110" height="64" rx="6" fill="none" stroke="#f3e6cc" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M700 40 C640 120 560 140 470 160 M470 160 C380 200 340 220 300 240" fill="none" stroke="#f3e6cc" stroke-width="10" stroke-linecap="round" opacity=".25"/>
+  <path d="M60 300 h120 v90 h-120z" fill="#0d0c0b" opacity=".35"/>
+  <g transform="translate(720 470)"><circle r="30" fill="#ff4b14"/><path d="M-8 6h16v-20h-16z M-10 -14h20v-4h-20z" fill="#f3e6cc"/></g>
+  <text x="720" y="520" fill="#f3e6cc" font-family="Jost,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">GEDIMINO BOKŠTAS ↘</text>
+  <path d="M30 40 l14 -24 l14 24z" fill="#f3e6cc"/><text x="44" y="58" fill="#f3e6cc" font-family="Jost,sans-serif" font-size="11" text-anchor="middle" letter-spacing="2">Š</text>`;
+  PINS.forEach((p,i)=>h+=`<g class="pin" data-i="${i}" tabindex="0" role="button" aria-label="${p.t}" transform="translate(${p.x} ${p.y})"><circle class="r" r="22"/><text>${i+1}</text></g>`);
+  s.innerHTML=h;$('#legend').innerHTML=PINS.map((p,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><i>${i+1}</i>${p.t}</button>`).join('');
+  const sel=i=>{const p=PINS[i];$('#miK').textContent=p.k;$('#miT').textContent=p.t;$('#miP').textContent=p.p;
+    $$('.pin').forEach(g=>g.classList.toggle('on',+g.dataset.i===i));$$('#legend button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===i))};
+  $$('.pin').forEach(g=>{g.onclick=()=>sel(+g.dataset.i);g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sel(+g.dataset.i)}}});
+  $$('#legend button').forEach(b=>b.onclick=()=>sel(+b.dataset.i));sel(0)}
+buildMap();
+
+/* ---------- tickets ---------- */
+const TIX=[{n:'Viena diena',d:'Penktadienis arba šeštadienis',p:45,s:'1 diena'},{n:'Dvi dienos',d:'Abi naktys, visos scenos',p:75,s:'2 dienos'},{n:'Visa tamsa',d:'Dvi dienos, rūmų balkonas ir švyturėlis dovanų',p:140,s:'VIP'}];
+let TS=1,Q=1,TNO=store.get('tamsa-no',1);
+const mini=`<svg viewBox="0 0 360 200" preserveAspectRatio="xMinYMid slice" aria-hidden="true"><defs>
+  <pattern id="td" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2.5" cy="2.5" r="1.55" fill="#0d0c0b"/></pattern>
+  <pattern id="tb" width="4.5" height="4.5" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><circle cx="2.25" cy="2.25" r="1.5" fill="#f3e6cc"/></pattern>
+  <pattern id="hdt" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.35" fill="#2233c4"/></pattern>
+  <clipPath id="tc"><circle cx="128" cy="122" r="82"/></clipPath>
+  <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <mask id="tm"><path d="M86 24 H120 L196 200 H18Z" fill="url(#tg)"/></mask></defs>
+  <circle cx="128" cy="122" r="82" fill="#ff4b14"/>
+  <g clip-path="url(#tc)">${[0,1,2,3,4].map(i=>`<path d="M30 ${84+i*22} C70 ${70+i*22} 110 ${100+i*22} 150 ${86+i*22} S200 ${74+i*22} 230 ${88+i*22} V${100+i*22+i*2} C200 ${88+i*22} 180 ${110+i*22} 145 ${100+i*22} S70 ${88+i*22} 30 ${100+i*22}Z" fill="url(#td)" opacity="${.55+i*.1}"/>`).join('')}</g>
+  <path d="M86 24 H120 L196 200 H18Z" fill="url(#tb)" mask="url(#tm)"/><path d="M90 0 H116 L120 24 H86Z" fill="#f3e6cc"/>
+  <path d="M168 200 C184 182 204 168 222 162 H234 C250 168 266 184 282 200Z" fill="#0d0c0b"/><path d="M174 200 C190 186 208 176 228 172 C248 178 262 190 276 200Z" fill="url(#hdt)"/>
+  <path d="M222 162 V142 h12 V162Z" fill="#f3e6cc"/><path d="M221 140 h14 v3 h-14z" fill="#f3e6cc"/><path d="M227.5 132 v8" stroke="#f3e6cc"/><rect x="225" y="149" width="2.5" height="4" fill="#ff4b14"/><rect x="229" y="149" width="2.5" height="4" fill="#16208a"/>
+  <path d="M0 64 H20 V200 H0Z" fill="#2233c4"/><path d="M20 118 L178 160 L178 168 L20 136Z" fill="#2233c4"/><path d="M20 136 L178 168 L178 172 L20 144Z" fill="#16208a"/><path d="M20 144 L100 160 V200 H20Z" fill="#0d0c0b"/>
+  <path d="M100 158 h7 v42 h-7z M122 162 h6 v38 h-6z M142 166 h6 v34 h-6z M160 170 h6 v30 h-6z" fill="#2233c4"/><path d="M0 194 H170 L164 200 H0Z" fill="#2233c4"/>
+  <path d="M-2 186 Q50 186 110 196 M-2 192 Q30 192 66 199" stroke="#f3e6cc" stroke-width="2.6" fill="none"/></svg>`;
+function buildTix(){$('#opts').innerHTML=TIX.map((t,i)=>`<button type="button" class="opt" role="radio" aria-checked="${i===TS}" data-i="${i}"><b>${t.n}</b><span class="pr">${t.p} €</span><small>${t.d}</small></button>`).join('');
+  $$('.opt').forEach(b=>b.onclick=()=>{TS=+b.dataset.i;buildTix()});
+  $('#tmain').innerHTML=mini+`<div class="ttl"><svg viewBox="0 0 ${WM.w} ${WM.h}"><path fill="#f3e6cc" d="${WM.d}"/></svg><span class="caps">Muzikos festivalis</span><span class="caps">Vilnius</span><span class="dt">2027 m. liepos 16–17 d.</span><span class="nm" id="tnm">${esc($('#tname').value)||'Jūsų vardas'}</span></div>`;
+  $('#sty').textContent=TIX[TS].s+(Q>1?` ×${Q}`:'');$('#sno').textContent=String(TNO).padStart(6,'0');$('#qv').textContent=Q;$('#tsum').textContent=TIX[TS].p*Q+' €'}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+$('#tname').oninput=()=>{$('#tnm').textContent=$('#tname').value||'Jūsų vardas'};
+$('#qm').onclick=()=>{Q=Math.max(1,Q-1);buildTix()};$('#qp').onclick=()=>{Q=Math.min(8,Q+1);buildTix()};
+const stub=$('#stub');let sd=null;
+function tearOff(){if(stub.classList.contains('gone'))return;stub.style.transform='';stub.classList.add('gone');$('#tmsg').classList.add('on');TNO++;store.set('tamsa-no',TNO)}
+stub.addEventListener('pointerdown',e=>{if(stub.classList.contains('gone'))return;sd={x:e.clientX,y:e.clientY};stub.setPointerCapture(e.pointerId);stub.classList.add('drag')});
+stub.addEventListener('pointermove',e=>{if(!sd)return;const dx=Math.max(0,e.clientX-sd.x),dy=Math.max(0,e.clientY-sd.y),m=Math.min(1,Math.hypot(dx,dy)/110);
+  stub.style.transform=`translate(${dx*.25}px,${dy*.25}px) rotate(${m*14}deg)`;if(m>=1){sd=null;stub.classList.remove('drag');tearOff()}});
+const endDrag=()=>{if(!sd)return;sd=null;stub.classList.remove('drag');stub.style.transition='transform .3s';stub.style.transform='';setTimeout(()=>stub.style.transition='',300)};
+stub.addEventListener('pointerup',endDrag);stub.addEventListener('pointercancel',endDrag);
+stub.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tearOff()}};
+$('#tbuy').onclick=tearOff;
+$('#tagain').onclick=()=>{stub.classList.remove('gone');$('#tmsg').classList.remove('on');buildTix()};
+buildTix();
+
+/* ---------- merch ---------- */
+$$('#teeview button').forEach(b=>b.onclick=()=>{$$('#teeview button').forEach(x=>x.setAttribute('aria-pressed',x===b));$$('#tee img').forEach(i=>i.classList.toggle('on',i.dataset.v===b.dataset.v))});
+$$('#sizes button').forEach(b=>b.onclick=()=>$$('#sizes button').forEach(x=>x.setAttribute('aria-pressed',x===b)));
+$('#teebuy').onclick=()=>toast('Koncepcinis projektas: atributika neparduodama.');
+$('#news').onsubmit=e=>{e.preventDefault();toast('Ačiū! Tai koncepcinis projektas, todėl laiškų nesiųsime.');e.target.reset()};
+</script>
+</body>
+</html>

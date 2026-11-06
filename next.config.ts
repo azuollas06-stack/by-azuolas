@@ -14,7 +14,11 @@ const isDev = process.env.NODE_ENV === "development";
  * cannot be framed.
  *
  * Fonts are self-hosted by next/font at build time, so no external font origin
- * is needed. `data:` covers the inline SVG used by the film-grain overlay.
+ * is needed.
+ *
+ * The concept sites under /darbai are standalone pages that load Google Fonts,
+ * so that path gets its own policy (declared after the global one, which it
+ * overrides) allowing exactly those two origins.
  */
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -31,6 +35,10 @@ const contentSecurityPolicy = [
   isDev ? "connect-src 'self' ws: wss:" : "connect-src 'self'",
   "upgrade-insecure-requests",
 ].join("; ");
+
+const conceptPolicy = contentSecurityPolicy
+  .replace("style-src 'self' 'unsafe-inline'", "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com")
+  .replace("font-src 'self'", "font-src 'self' https://fonts.gstatic.com");
 
 const securityHeaders = [
   { key: "Content-Security-Policy", value: contentSecurityPolicy },
@@ -49,7 +57,23 @@ const nextConfig: NextConfig = {
     qualities: [75, 90],
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      { source: "/darbai/:path*", headers: [{ key: "Content-Security-Policy", value: conceptPolicy }] },
+    ];
+  },
+  // The old multi-page site collapsed into one page; keep its links working.
+  async redirects() {
+    const to = (source: string, hash: string) => ({ source, destination: `/#${hash}`, permanent: true });
+    return [
+      to("/portfolio", "darbai"),
+      to("/concepts/:path*", "darbai"),
+      to("/services", "paslaugos"),
+      to("/process", "paslaugos"),
+      to("/about", "top"),
+      to("/faq", "paslaugos"),
+      to("/contact", "kontaktai"),
+    ];
   },
 };
 
