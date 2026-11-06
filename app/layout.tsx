@@ -1,48 +1,28 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, Bebas_Neue } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-import { SmoothScroll } from "@/components/smooth-scroll";
-import { FilmGrain } from "@/components/film-grain";
-import { CursorGlow } from "@/components/cursor-glow";
-import { ScrollProgress } from "@/components/scroll-progress";
-import { MotionProvider } from "@/components/motion-provider";
 import { StructuredData } from "@/components/structured-data";
 import { SITE_URL } from "@/lib/site";
 
-const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
-// Every `font-display` element on the site is italic and none set a weight, so
-// this loads the real italic — which was never requested, leaving the browser
-// to fake it by skewing the upright — and drops 500/600/700, which nothing used.
-const playfair = Playfair_Display({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-display",
-  weight: ["400"],
-  style: ["normal", "italic"],
+// Self-hosted variable font (weight 100–900, width 62–125): one file covers the
+// wide light wordmark and the normal body text.
+const archivo = localFont({
+  src: "./fonts/Archivo.woff2",
+  variable: "--font",
+  weight: "100 900",
+  display: "swap",
 });
-const bebasNeue = Bebas_Neue({ subsets: ["latin", "latin-ext"], variable: "--font-condensed", weight: "400" });
 
-const title = "BY.AZUOLAS | Premium skaitmeninis dizainas verslui";
+const title = "BY.AZUOLAS · Svetainės, el. parduotuvės ir logotipai";
 const description =
-  "Kuriu premium svetaines, Shopify parduotuves, prekės ženklo identitetą ir UX/UI dizainą verslams, kurie nori atrodyti ir jaustis premium.";
+  "Ąžuolas, nepriklausomas dizaineris iš Lietuvos. Kuriu svetaines, Shopify parduotuves ir logotipus. Prie kiekvienos svetainės nemokamas reklaminis video.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: title,
-    template: "%s | BY.AZUOLAS",
-  },
+  title,
   description,
   alternates: { canonical: "/" },
-  keywords: [
-    "premium svetainių kūrimas",
-    "Shopify parduotuvė",
-    "prekės ženklo identitetas",
-    "UX/UI dizainas",
-    "logotipo kūrimas",
-    "digital brand agency",
-  ],
-  authors: [{ name: "BY.AZUOLAS" }],
   openGraph: {
     title,
     description,
@@ -50,37 +30,30 @@ export const metadata: Metadata = {
     locale: "lt_LT",
     url: SITE_URL,
     siteName: "BY.AZUOLAS",
-    images: [{ url: "/media/azuolas-sedi.png", width: 1536, height: 1024 }],
+    images: [{ url: "/img/og.jpg", width: 1200, height: 630 }],
   },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-    images: ["/media/azuolas-sedi.png"],
-  },
+  twitter: { card: "summary_large_image", title, description, images: ["/img/og.jpg"] },
   robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#000000",
+  viewportFit: "cover",
 };
+
+// Runs before paint: a visitor who already saw the intro this session (or prefers
+// reduced motion) never gets a flash of it.
+const seen = `try{if(sessionStorage.getItem("byazuolas:intro")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("seen","ready")}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="lt"
-      className={`${inter.variable} ${playfair.variable} ${bebasNeue.variable}`}
-    >
+    <html lang="lt" className={archivo.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: seen }} />
+      </head>
       <body>
         <StructuredData />
-        {/* Wraps the overlays too — CursorGlow and ScrollProgress are Framer
-            components and sit outside SmoothScroll. */}
-        <MotionProvider>
-          <SmoothScroll>{children}</SmoothScroll>
-          <FilmGrain />
-          <CursorGlow />
-          <ScrollProgress />
-        </MotionProvider>
+        {children}
       </body>
     </html>
   );
