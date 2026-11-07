@@ -1,4 +1,6 @@
-/* BY.AZUOLAS — black and white. One typeface (Archivo, variable width), no accent colour:
+/* Nothing here blurs what is behind it (no backdrop-filter): the work cards play video,
+   and blurring over a playing video forces a full repaint every frame.
+   BY.AZUOLAS — black and white. One typeface (Archivo, variable width), no accent colour:
    the colour on this page comes only from the work itself. */
 :root {
   --k: #000;
@@ -59,8 +61,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* ---------- bar ---------- */
 .bar {
   position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 24px;
-  height: 64px; padding-inline: var(--px); background: rgba(0, 0, 0, 0.82);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+  height: 64px; padding-inline: var(--px); background: rgba(0, 0, 0, 0.94); border-bottom: 1px solid var(--line);
 }
 .mark { font-weight: 300; font-stretch: 125%; letter-spacing: 0.06em; font-size: 16px; }
 .bar nav { display: flex; gap: 28px; margin-left: auto; font-size: 14px; color: var(--g); }
@@ -170,7 +171,7 @@ a.client:hover .go, .concept:hover .go, a.go:hover { color: var(--w); }
 .concept.wide .shot { aspect-ratio: 16 / 8; }
 .chip {
   position: absolute; left: 14px; top: 14px; font-size: 12px; letter-spacing: 0.04em; background: rgba(0, 0, 0, 0.72);
-  color: var(--w); padding: 6px 11px; border-radius: 999px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  color: var(--w); padding: 6px 11px; border-radius: 999px;
 }
 .cap { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 14px; align-items: baseline; padding-top: 18px; }
 .cap h4 { font-size: clamp(22px, 2.2vw, 32px); }
