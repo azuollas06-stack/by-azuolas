@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TYLA — 12 namų pušyne</title>
+<meta name="description" content="TYLA – kotedžų kvartalas pušyne, 20 min. nuo Vilniaus centro. Koncepcinis projektas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* TYLA — a developer's site that behaves like a site plan: the masterplan render is the interface,
+   every plot is a live object (status, price, plan), the rest of the page answers "can I afford it, when, where". */
+:root{
+  --bg:#eef0ea; --bg2:#e2e6dc; --card:#f8f9f5; --ink:#18201a; --ink2:#4b554b; --ink3:#7d867c; --line:rgba(24,32,26,.14);
+  --moss:#2f4a2c; --moss2:#3f6239;
+  --free:#2f9e5b; --res:#d69a2a; --sold:#9aa29a;
+  --f:"Instrument Sans",system-ui,-apple-system,sans-serif; --m:"IBM Plex Mono",ui-monospace,monospace;
+  --gr:max(16px,min(4vw,48px));
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--f);-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.mono{font-family:var(--m);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.wrap{padding-inline:var(--gr);max-width:1440px;margin-inline:auto}
+:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:6px}
+h1,h2,h3{font-stretch:78%;font-weight:600;letter-spacing:-.02em;line-height:.95;margin:0;text-wrap:balance}
+
+/* header */
+.top{position:sticky;top:0;z-index:30;background:rgba(238,240,234,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;height:64px}
+.logo{display:flex;align-items:baseline;gap:12px;text-decoration:none}
+.logo b{font-size:26px;font-weight:700;font-stretch:75%;letter-spacing:.12em}
+.logo span{color:var(--ink3)}
+.top nav{display:flex;gap:26px}.top nav a{text-decoration:none;font-size:15px;color:var(--ink2)}.top nav a:hover{color:var(--ink)}
+.btn{appearance:none;border:0;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:46px;padding:0 20px;border-radius:12px;background:var(--moss);color:#f3f5ef;font-weight:600;font-size:15px;text-decoration:none;transition:background .2s,transform .15s}
+.btn:hover{background:var(--moss2)}.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+@media(max-width:900px){.top nav{display:none}.logo span{display:none}}
+
+/* hero + masterplan */
+.hero{padding-block:clamp(28px,4vw,56px) 0}
+.hero .row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:30px;align-items:end}
+@media(max-width:900px){.hero .row{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(46px,6.2vw,100px)}
+.hero h1 span{color:var(--moss2)}
+.hero p{color:var(--ink2);max-width:46ch;margin:0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border-block:1px solid var(--line);margin-top:22px}
+.stats div{background:var(--bg);padding:14px 4px 14px 0}
+.stats b{display:block;font-size:clamp(22px,2.6vw,34px);font-weight:600;font-stretch:80%;font-variant-numeric:tabular-nums}
+.stats span{color:var(--ink3);font-size:14px}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.plan{position:relative;margin-top:22px;border-radius:18px;overflow:hidden;background:#cfd6c7;aspect-ratio:16/9;max-height:86vh;width:100%}
+@media(max-width:760px){.plan{aspect-ratio:4/5;border-radius:14px}}
+.plan img,.plan svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plan .night{opacity:0;transition:opacity 1.2s ease}
+.plan.dark .night{opacity:1}
+.plot{cursor:pointer;transition:fill-opacity .2s,stroke-width .2s}
+.plot path{fill-opacity:.32;stroke-width:3;transition:fill-opacity .2s}
+.plot.free path{fill:var(--free);stroke:#e9ffe9}
+.plot.res path{fill:var(--res);stroke:#fff3d6}
+.plot.sold path{fill:var(--sold);stroke:#f2f2f2;fill-opacity:.42}
+.plot:hover path,.plot.hl path{fill-opacity:.62;stroke-width:5}
+.plot.dim{opacity:.18}
+.plot circle{fill:#fff;stroke:var(--ink);stroke-width:2}
+.plot text{font:600 26px var(--f);fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.plot:focus{outline:none}.plot:focus-visible path{stroke:#111;stroke-width:6}
+.legend{position:absolute;left:14px;top:14px;display:flex;gap:6px;flex-wrap:wrap;max-width:calc(100% - 28px)}
+.pill{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:999px;background:rgba(248,249,245,.92);font-size:13px;font-weight:500;white-space:nowrap}
+.pill i{width:10px;height:10px;border-radius:50%}
+.dn{position:absolute;right:14px;top:14px;display:flex;background:rgba(248,249,245,.92);border-radius:999px;padding:4px}
+.dn button{appearance:none;border:0;background:transparent;border-radius:999px;height:30px;padding:0 14px;font-size:13px;font-weight:600}
+.dn button[aria-pressed="true"]{background:var(--ink);color:#fff}
+@media(max-width:600px){.legend{top:auto;bottom:12px}.dn{top:12px;right:12px}}
+.tip{position:absolute;left:0;top:0;pointer-events:none;background:var(--card);border-radius:12px;padding:12px 14px;box-shadow:0 12px 30px rgba(0,0,0,.18);min-width:200px;opacity:0;transform:translate(-50%,-115%);transition:opacity .15s;z-index:3}
+.tip b{font-size:18px;font-stretch:80%;display:block}
+.tip span{color:var(--ink2);font-size:14px}
+.status{white-space:nowrap;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.status.free{background:#dcf2e3;color:#1e6a3c}.status.res{background:#f8ead0;color:#86600f}.status.sold{background:#e5e7e4;color:#5e655e}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.planhint{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--ink3);margin-top:12px}
+
+/* sections */
+section.s{padding-block:clamp(72px,9vw,130px)}
+.sh{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:34px}
+.sh h2{font-size:clamp(40px,5.4vw,80px)}
+.sh p{color:var(--ink2);max-width:46ch;margin:0}
+
+/* table */
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.seg{display:flex;background:var(--bg2);border-radius:12px;padding:4px}
+.seg button{appearance:none;border:0;background:transparent;border-radius:9px;height:36px;padding:0 14px;font-size:14px;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;padding:0 6px}
+.chk input{width:18px;height:18px;accent-color:var(--moss)}
+.price{display:flex;align-items:center;gap:10px;font-size:14px;margin-left:auto}
+.price input{accent-color:var(--moss);width:160px}
+.tbl{overflow-x:auto;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;min-width:680px;font-variant-numeric:tabular-nums}
+th{font:500 12px var(--m);letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:14px 16px;border-bottom:1px solid var(--line)}
+td{padding:14px 16px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer;transition:background .15s}
+tbody tr:hover,tbody tr.hl{background:#eef2e8}
+td.num{font-weight:600}
+.empty{padding:30px;text-align:center;color:var(--ink3)}
+
+/* house types */
+.types{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media(max-width:900px){.types{grid-template-columns:1fr}}
+.type{background:var(--card);border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+.type .view{position:relative;aspect-ratio:16/10;background:var(--bg2)}
+.type .view img,.type .view svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.type .view svg{background:#f4f5f0;opacity:0;transition:opacity .35s}
+.type.planon .view svg{opacity:1}
+.type .view img.dk{opacity:0;transition:opacity .35s}
+.type.duskon .view img.dk{opacity:1}
+.type .tabs{position:absolute;left:12px;top:12px;display:flex;background:rgba(248,249,245,.94);border-radius:10px;padding:3px}
+.type .tabs button{appearance:none;border:0;background:transparent;border-radius:8px;height:30px;padding:0 12px;font-size:13px;font-weight:600}
+.type .tabs button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.type .b{padding:22px 22px 24px;display:flex;flex-direction:column;gap:14px}
+.type h3{font-size:40px}
+.type p{margin:0;color:var(--ink2)}
+.spec{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border-block:1px solid var(--line)}
+.spec div{background:var(--card);padding:10px 0}.spec b{display:block;font-size:20px;font-weight:600;font-stretch:85%}.spec span{font-size:13px;color:var(--ink3)}
+.planw{fill:none;stroke:var(--ink);stroke-width:5}.plani{fill:none;stroke:var(--ink);stroke-width:2.2}.plant{font:500 15px var(--f);fill:var(--ink2);text-anchor:middle}.planm{font:500 13px var(--m);fill:var(--ink3);text-anchor:middle}
+.planr:hover{fill:#e3ead9}.planr{fill:transparent;transition:fill .15s}
+
+/* calculator */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,60px);background:var(--card);border-radius:22px;padding:clamp(20px,3vw,40px);border:1px solid var(--line)}
+@media(max-width:860px){.calc{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.field label{display:flex;justify-content:space-between;font-size:15px;color:var(--ink2)}
+.field label b{color:var(--ink);font-variant-numeric:tabular-nums}
+.field input[type=range]{accent-color:var(--moss);width:100%}
+.field select{height:46px;border-radius:12px;border:1px solid var(--line);background:#fff;padding:0 12px}
+.res{display:flex;flex-direction:column;justify-content:center;gap:12px}
+.res .big{font-size:clamp(56px,7vw,96px);font-weight:600;font-stretch:78%;line-height:.9;font-variant-numeric:tabular-nums}
+.bar{display:flex;height:14px;border-radius:999px;overflow:hidden;background:var(--bg2)}
+.bar i{display:block;height:100%;transition:width .3s}
+.keys{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--ink2)}.keys span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--c)}
+.small{font-size:13px;color:var(--ink3)}
+
+/* location + timeline */
+.loc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,60px);align-items:center}
+@media(max-width:860px){.loc{grid-template-columns:1fr}}
+.map{background:var(--bg2);border-radius:22px;overflow:hidden}
+.map svg{display:block;width:100%;height:auto}
+.dist{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.dist li{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.dist b{font-weight:600;font-variant-numeric:tabular-nums}
+.tl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:60px}
+@media(max-width:760px){.tl{grid-template-columns:1fr 1fr}}
+.tl div{border-top:3px solid var(--line);padding-top:14px}
+.tl div.done{border-color:var(--moss)}.tl div.now{border-image:linear-gradient(90deg,var(--moss) 55%,var(--line) 55%) 1}
+.tl b{display:block;font-size:20px;font-weight:600;font-stretch:85%;margin:6px 0 4px}
+.tl p{margin:0;color:var(--ink2);font-size:15px}
+
+/* booking */
+.book{background:var(--moss);color:#eef2ea;border-radius:26px;padding:clamp(22px,4vw,56px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,4vw,60px)}
+@media(max-width:900px){.book{grid-template-columns:1fr}}
+.book h2{font-size:clamp(40px,5vw,72px)}
+.book p{color:#c9d4c4}
+.days,.slots{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.days button,.slots button{appearance:none;border:0;border-radius:12px;background:rgba(255,255,255,.1);color:#eef2ea;padding:10px 12px;min-width:62px;font-size:14px;line-height:1.2;text-align:center}
+.days button small{display:block;font-size:11px;opacity:.75;text-transform:uppercase}
+.days button[aria-pressed="true"],.slots button[aria-pressed="true"]{background:#eef2ea;color:var(--moss)}
+.slots button:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.book .in{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.book .in{grid-template-columns:1fr}}
+.book input,.book select{height:48px;border-radius:12px;border:0;padding:0 14px;background:#f4f6f1;color:var(--ink);width:100%}
+.book label{display:block;font-size:13px;color:#c9d4c4;margin-bottom:6px}
+.book .go{margin-top:14px;width:100%;height:54px;background:#eef2ea;color:var(--moss)}
+.book .go:hover{background:#fff}
+.err{color:#ffd6c9;min-height:20px;font-size:14px;margin-top:8px}
+.ok{display:none;text-align:left}.book.done form{display:none}.book.done .ok{display:block}
+.ok b{font-size:34px;font-weight:600;font-stretch:80%;display:block;margin-bottom:8px}
+
+footer{padding-block:40px 50px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--ink3);font-size:14px}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(15,20,15,.35);z-index:60;opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s .25s}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(440px,100vw);background:var(--card);z-index:61;transform:translateX(104%);transition:transform .4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.18);overflow:auto}
+body.open .scrim{opacity:1;visibility:visible;transition:opacity .25s}body.open .drawer{transform:none}
+.drawer img{aspect-ratio:16/10;object-fit:cover;width:100%}
+.drawer .b{padding:22px;display:flex;flex-direction:column;gap:16px}
+.drawer h3{font-size:46px}
+.drawer dl{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-block:1px solid var(--line);margin:0}
+.drawer dl div{background:var(--card);padding:12px 0}.drawer dt{font-size:13px;color:var(--ink3)}.drawer dd{margin:0;font-size:20px;font-weight:600;font-stretch:85%;font-variant-numeric:tabular-nums}
+.drawer .x{position:absolute;right:14px;top:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(248,249,245,.95);font-size:22px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.drawer .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="#" aria-label="TYLA — į pradžią"><b>TYLA</b><span class="mono">12 namų pušyne</span></a>
+  <nav aria-label="Pagrindinis"><a href="#sklypai">Sklypai</a><a href="#namai">Namai</a><a href="#skaiciuokle">Skaičiuoklė</a><a href="#vieta">Vieta</a></nav>
+  <a class="btn" href="#apziura">Užsakyti apžiūrą</a>
+</div></header>
+
+<main>
+<section class="hero wrap" aria-labelledby="h1">
+  <div class="row">
+    <h1 id="h1">12 namų.<br>Pušynas. <span>Tyla.</span></h1>
+    <p>Kotedžų kvartalas 20 minučių nuo Vilniaus centro. Kiekvienas namas stovi ant 9 arų sklypo, o už tvoros prasideda pušynas. Paspauskite sklypą žemėlapyje.</p>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="plan" id="plan">
+    <img src="img/day.jpg" alt="TYLA kvartalas iš viršaus dieną: 12 namų prie vienos gatvės, aplink pušynas">
+    <img class="night" src="img/dusk.jpg" alt="" aria-hidden="true">
+    <svg id="ov" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-label="Sklypų žemėlapis"></svg>
+    <div class="legend" aria-hidden="true"><span class="pill"><i style="background:var(--free)"></i>Laisvas</span><span class="pill"><i style="background:var(--res)"></i>Rezervuotas</span><span class="pill"><i style="background:var(--sold)"></i>Parduotas</span></div>
+    <div class="dn" role="group" aria-label="Paros metas"><button type="button" data-n="0" aria-pressed="true">Diena</button><button type="button" data-n="1" aria-pressed="false">Vakaras</button></div>
+    <div class="tip" id="tip" aria-hidden="true"></div>
+  </div>
+  <div class="planhint mono"><span>Vizualizacija · sklypų ribos tikslios, augalija iliustracinė</span><span id="freecount"></span></div>
+</section>
+
+<section class="s wrap" id="sklypai" aria-labelledby="h2a">
+  <div class="sh"><h2 id="h2a">Sklypai</h2><p>Lentelė susieta su žemėlapiu: užvedus pelę ant eilutės, sklypas paryškėja viršuje.</p></div>
+  <div class="filters">
+    <div class="seg" role="group" aria-label="Namo tipas" id="ftype"><button type="button" data-t="all" aria-pressed="true">Visi</button><button type="button" data-t="A" aria-pressed="false">Gegnė</button><button type="button" data-t="B" aria-pressed="false">Terasa</button></div>
+    <label class="chk"><input type="checkbox" id="ffree"> Tik laisvi</label>
+    <label class="price" for="fmax">Iki <b id="fmaxv">400 000 €</b><input type="range" id="fmax" min="280000" max="400000" step="5000" value="400000"></label>
+  </div>
+  <div class="tbl"><table><thead><tr><th>Nr.</th><th>Namas</th><th>Sklypas</th><th>Namo plotas</th><th>Kaina</th><th>Būsena</th></tr></thead><tbody id="tb"></tbody></table></div>
+</section>
+
+<section class="s wrap" id="namai" aria-labelledby="h2b" style="padding-top:0">
+  <div class="sh"><h2 id="h2b">Du namai</h2><p>Abu – A++ klasės, su šilumos siurbliu, saulės elektrine ir paruošti įsikurti. Skiriasi charakteriu.</p></div>
+  <div class="types" id="types"></div>
+</section>
+
+<section class="s" id="skaiciuokle" aria-labelledby="h2c" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sh"><h2 id="h2c">Kiek mokėtumėte per mėnesį?</h2><p>Apytikslis anuiteto skaičiavimas. Tikslias sąlygas pasiūlys bankas.</p></div>
+    <div class="calc">
+      <div>
+        <div class="field"><label for="cplot">Sklypas</label><select id="cplot"></select></div>
+        <div class="field"><label for="cdown">Pradinis įnašas <b id="cdownv"></b></label><input type="range" id="cdown" min="15" max="50" step="1" value="20"></div>
+        <div class="field"><label for="cyears">Terminas <b id="cyearsv"></b></label><input type="range" id="cyears" min="10" max="30" step="1" value="30"></div>
+        <div class="field"><label for="crate">Palūkanos <b id="cratev"></b></label><input type="range" id="crate" min="2" max="7" step=".1" value="4.2"></div>
+      </div>
+      <div class="res">
+        <span class="mono">Mėnesio įmoka</span>
+        <span class="big" id="cpay">—</span>
+        <div class="bar" aria-hidden="true"><i id="cb1" style="background:var(--moss2)"></i><i id="cb2" style="background:var(--res)"></i></div>
+        <div class="keys"><span style="--c:var(--moss2)" id="ck1"></span><span style="--c:var(--res)" id="ck2"></span></div>
+        <p class="small" id="cnote"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s wrap" id="vieta" aria-labelledby="h2d">
+  <div class="sh"><h2 id="h2d">Vieta</h2><p>Pušynas iš trijų pusių, o iki miesto – viena sankryža.</p></div>
+  <div class="loc">
+    <div class="map"><svg viewBox="0 0 640 440" role="img" aria-label="Schema: TYLA kvartalas pušyne į šiaurę nuo Vilniaus">
+      <rect width="640" height="440" fill="#e2e6dc"/>
+      <path d="M0 300 C120 280 200 330 300 300 S520 220 640 250 L640 440 L0 440Z" fill="#cdd8c3"/>
+      <g fill="#a9bb9d"><circle cx="380" cy="120" r="70"/><circle cx="470" cy="160" r="80"/><circle cx="300" cy="80" r="55"/><circle cx="540" cy="90" r="60"/><circle cx="420" cy="60" r="50"/></g>
+      <path d="M40 420 C140 360 230 300 330 240 S470 170 520 150" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+      <path d="M40 420 C140 360 230 300 330 240 S470 170 520 150" fill="none" stroke="#9aa59a" stroke-width="2" stroke-dasharray="1 0"/>
+      <path d="M560 420 C540 380 600 330 620 300" fill="none" stroke="#9ec3d6" stroke-width="16" stroke-linecap="round" opacity=".8"/>
+      <rect x="400" y="110" width="80" height="52" rx="6" fill="#2f4a2c"/><text x="440" y="142" text-anchor="middle" font-family="Instrument Sans" font-weight="700" font-size="16" fill="#eef2ea" letter-spacing="2">TYLA</text>
+      <circle cx="40" cy="420" r="9" fill="#18201a"/><text x="58" y="414" font-family="IBM Plex Mono" font-size="13" fill="#18201a">VILNIAUS CENTRAS ↙</text>
+      <circle cx="300" cy="262" r="6" fill="#d69a2a"/><text x="312" y="280" font-family="IBM Plex Mono" font-size="12" fill="#4b554b">MOKYKLA</text>
+      <circle cx="590" cy="350" r="6" fill="#2f9e5b"/><text x="520" y="380" font-family="IBM Plex Mono" font-size="12" fill="#4b554b">EŽERAS</text>
+      <text x="20" y="34" font-family="IBM Plex Mono" font-size="12" fill="#7d867c">SCHEMA · NE MASTELIS</text>
+    </svg></div>
+    <ul class="dist"><li><span>Vilniaus centras</span><b>20 min</b></li><li><span>Mokykla ir darželis</span><b>6 min</b></li><li><span>Prekybos centras</span><b>9 min</b></li><li><span>Ežeras su paplūdimiu</span><b>4 km</b></li><li><span>Pušyno takai</span><b>už tvoros</b></li></ul>
+  </div>
+  <div class="tl" aria-label="Statybų etapai">
+    <div class="done"><span class="mono">2025 III ketv.</span><b>Detalusis planas</b><p>Patvirtintas, sklypai suformuoti.</p></div>
+    <div class="done"><span class="mono">2026 I ketv.</span><b>Inžineriniai tinklai</b><p>Vanduo, nuotekos, elektra, gatvė.</p></div>
+    <div class="now"><span class="mono">2026 IV ketv. · dabar</span><b>Namų karkasai</b><p>Stogai uždengti 8 namams iš 12.</p></div>
+    <div><span class="mono">2027 II ketv.</span><b>Įkurtuvės</b><p>Raktai, aplinka, želdiniai.</p></div>
+  </div>
+</section>
+
+<section class="s wrap" id="apziura" aria-labelledby="h2e" style="padding-top:0">
+  <div class="book" id="book">
+    <div><h2 id="h2e">Atvažiuokite pasivaikščioti</h2><p>Apžiūra trunka apie valandą: parodome sklypus, statomą namą ir pušyno taką. Pasirinkite dieną ir laiką.</p><p class="mono" id="bsel" style="color:#eef2ea"></p></div>
+    <div>
+      <form id="bform" novalidate>
+        <div class="days" id="days" role="group" aria-label="Diena"></div>
+        <div class="slots" id="slots" role="group" aria-label="Laikas"></div>
+        <div class="in">
+          <div><label for="bn">Vardas</label><input id="bn" autocomplete="name" required></div>
+          <div><label for="bp">Telefonas</label><input id="bp" type="tel" inputmode="tel" autocomplete="tel" placeholder="+370" required></div>
+        </div>
+        <div style="margin-top:10px"><label for="bplot">Domina sklypas</label><select id="bplot"></select></div>
+        <div class="err" id="berr" role="alert"></div>
+        <button class="btn go" type="submit">Užsakyti apžiūrą</button>
+      </form>
+      <div class="ok" role="status"><b id="okt">Iki pasimatymo!</b><p id="okp"></p><p class="small" style="color:#c9d4c4">Tai koncepcinis projektas, todėl duomenys niekur nesiunčiami.</p><button class="btn ghost" type="button" id="again" style="color:#eef2ea;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)">Užsakyti kitą laiką</button></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 TYLA · Koncepcinis projektas · kvartalas ir vieta išgalvoti</span><span>Dizainas, 3D ir kodas — by-azuolas</span></div></footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="dh">
+  <button class="x" type="button" id="dx" aria-label="Uždaryti">×</button>
+  <img id="dimg" alt="">
+  <div class="b">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="mono" id="dtype"></span><span class="status" id="dst"></span></div>
+    <h3 id="dh"></h3>
+    <dl id="ddl"></dl>
+    <p id="dp" style="margin:0;color:var(--ink2)"></p>
+    <div class="acts"><a class="btn" href="#apziura" id="dbook">Užsakyti apžiūrą</a><a class="btn ghost" href="#skaiciuokle" id="dcalc">Paskolos skaičiuoklė</a></div>
+  </div>
+</aside>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const eur=v=>Math.round(v).toLocaleString('lt-LT').replace(/ |,/g,' ')+' €';
+const TYPES={A:{name:'Gegnė',m2:142,rooms:4,img:'img/houseA.jpg',dk:'img/houseA_dusk.jpg',text:'Šlaitinis stogas, apdegintos medienos fasadas ir stiklinis frontonas į pietus. Antroje šviesoje – darbo kampas su vaizdu į pušis.'},
+             B:{name:'Terasa',m2:168,rooms:5,img:'img/houseB.jpg',dk:'img/houseB_dusk.jpg',text:'Plokščias stogas, maumedžio lentos ir L forma, apglėbianti terasą. Visi kambariai viename aukšte.'}};
+const ST={free:'Laisvas',res:'Rezervuotas',sold:'Parduotas'};
+const STATUS=['sold','free','res','free','free','sold','free','free','res','sold','free','free'];
+const PRICE=[289,334,296,341,305,349,312,357,319,362,325,369].map(k=>k*1000);
+let PL=[];
+
+/* ---------- data from the render (plot corners projected from Blender) ---------- */
+fetch('plots.json').then(r=>r.json()).then(j=>{PL=j.map((p,i)=>({...p,area:String(p.area).replace('.',','),status:STATUS[i],price:PRICE[i],t:TYPES[p.type]}));init()});
+
+function init(){
+  const free=PL.filter(p=>p.status==='free');
+  $('#stats').innerHTML=`<div><b>12</b><span>namų</span></div><div><b>${free.length}</b><span>laisvi</span></div><div><b>nuo ${Math.round(Math.min(...free.map(p=>p.price))/1000)} k €</b><span>namas su sklypu</span></div><div><b>A++</b><span>energinė klasė</span></div>`;
+  $('#freecount').textContent=`${free.length} iš 12 laisvi`;
+  drawPlots();buildTable();buildTypes();buildCalc();buildBooking();
+}
+/* ---------- masterplan overlay ---------- */
+const ov=$('#ov'),tip=$('#tip'),plan=$('#plan');
+function drawPlots(){
+  ov.innerHTML=PL.map((p,i)=>{const pts=p.pts.map(([x,y])=>[x*1920,y*1080]);const cx=pts.reduce((a,q)=>a+q[0],0)/4,cy=pts.reduce((a,q)=>a+q[1],0)/4;
+    return `<g class="plot ${p.status}" data-i="${i}" tabindex="0" role="button" aria-label="Sklypas ${p.id}, ${p.t.name}, ${ST[p.status]}, ${eur(p.price)}"><path d="M${pts.map(q=>q.join(' ')).join('L')}Z"/><circle cx="${cx}" cy="${cy}" r="22"/><text x="${cx}" y="${cy+1}">${p.id}</text></g>`}).join('');
+  $$('.plot').forEach(g=>{const i=+g.dataset.i;
+    g.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')showTip(i,e);hl(i,true)});g.addEventListener('pointermove',e=>{if(e.pointerType==='mouse')moveTip(e)});
+    g.addEventListener('pointerleave',()=>{tip.style.opacity=0;hl(i,false)});g.addEventListener('click',()=>openPlot(i));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPlot(i)}})});
+}
+function showTip(i,e){const p=PL[i];tip.innerHTML=`<b>Sklypas ${p.id} · ${p.t.name}</b><span>${p.area} a · ${p.t.m2} m² · ${eur(p.price)}</span><div style="margin-top:6px"><span class="status ${p.status}">${ST[p.status]}</span></div>`;tip.style.opacity=1;moveTip(e)}
+function moveTip(e){const r=plan.getBoundingClientRect();tip.style.left=(e.clientX-r.left)+'px';tip.style.top=(e.clientY-r.top)+'px'}
+function hl(i,on){const g=$(`.plot[data-i="${i}"]`);g&&g.classList.toggle('hl',on);const tr=$(`#tb tr[data-i="${i}"]`);tr&&tr.classList.toggle('hl',on)}
+$$('.dn button').forEach(b=>b.onclick=()=>{plan.classList.toggle('dark',b.dataset.n==='1');$$('.dn button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+
+/* ---------- table + filters ---------- */
+let F={t:'all',free:false,max:400000};
+function buildTable(){
+  const rows=PL.map((p,i)=>({p,i})).filter(({p})=>(F.t==='all'||p.type===F.t)&&(!F.free||p.status==='free')&&p.price<=F.max);
+  $('#tb').innerHTML=rows.length?rows.map(({p,i})=>`<tr data-i="${i}" tabindex="0"><td class="num">${p.id}</td><td>${p.t.name}</td><td>${p.area} a</td><td>${p.t.m2} m²</td><td class="num">${eur(p.price)}</td><td><span class="status ${p.status}">${ST[p.status]}</span></td></tr>`).join('')
+    :`<tr><td colspan="6" class="empty">Pagal šiuos filtrus sklypų nėra. Pabandykite padidinti kainos ribą.</td></tr>`;
+  const vis=new Set(rows.map(r=>r.i));$$('.plot').forEach(g=>g.classList.toggle('dim',!vis.has(+g.dataset.i)));
+  $$('#tb tr[data-i]').forEach(tr=>{const i=+tr.dataset.i;tr.onmouseenter=()=>hl(i,true);tr.onmouseleave=()=>hl(i,false);tr.onclick=()=>openPlot(i);tr.onkeydown=e=>{if(e.key==='Enter')openPlot(i)}});
+}
+$$('#ftype button').forEach(b=>b.onclick=()=>{F.t=b.dataset.t;$$('#ftype button').forEach(x=>x.setAttribute('aria-pressed',x===b));buildTable()});
+$('#ffree').onchange=e=>{F.free=e.target.checked;buildTable()};
+$('#fmax').oninput=e=>{F.max=+e.target.value;$('#fmaxv').textContent=eur(F.max);buildTable()};
+
+/* ---------- drawer ---------- */
+let cur=-1;
+function openPlot(i){cur=i;const p=PL[i];$('#dimg').src=p.t.img;$('#dimg').alt=`Namas „${p.t.name}“`;$('#dtype').textContent=`Namas „${p.t.name}“`;
+  $('#dst').className='status '+p.status;$('#dst').textContent=ST[p.status];$('#dh').textContent=`Sklypas ${p.id}`;
+  $('#ddl').innerHTML=`<div><dt>Kaina</dt><dd>${eur(p.price)}</dd></div><div><dt>Sklypas</dt><dd>${p.area} a</dd></div><div><dt>Namo plotas</dt><dd>${p.t.m2} m²</dd></div><div><dt>Kambariai</dt><dd>${p.t.rooms}</dd></div>`;
+  $('#dp').textContent=p.status==='sold'?'Šis namas jau turi šeimininkus. Pažiūrėkite laisvus sklypus lentelėje.':p.t.text;
+  $('#dbook').style.display=p.status==='sold'?'none':'';
+  document.body.classList.add('open');$('#drawer').setAttribute('aria-hidden','false');setTimeout(()=>$('#dx').focus(),50)}
+function closeD(){document.body.classList.remove('open');$('#drawer').setAttribute('aria-hidden','true')}
+$('#dx').onclick=closeD;$('#scrim').onclick=closeD;addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
+$('#dbook').onclick=()=>{closeD();$('#bplot').value=PL[cur].id};
+$('#dcalc').onclick=()=>{closeD();$('#cplot').value=PL[cur].id;calc()};
+
+/* ---------- house types with switchable floor plans ---------- */
+const PLANS={
+ A:`<svg viewBox="0 0 640 400" aria-label="Namo Gegnė planas"><rect class="planw" x="120" y="40" width="400" height="300"/>
+   <rect class="planr" x="120" y="40" width="230" height="180"/><rect class="planr" x="350" y="40" width="170" height="120"/><rect class="planr" x="350" y="160" width="170" height="80"/><rect class="planr" x="120" y="220" width="130" height="120"/><rect class="planr" x="250" y="220" width="100" height="120"/><rect class="planr" x="350" y="240" width="170" height="100"/>
+   <path class="plani" d="M350 40V340M120 220H350M350 160H520M350 240H520M250 220V340"/>
+   <text class="plant" x="235" y="128">Svetainė + virtuvė</text><text class="planm" x="235" y="148">48 m²</text><text class="plant" x="435" y="98">Miegamasis</text><text class="planm" x="435" y="118">16 m²</text>
+   <text class="plant" x="435" y="200">Vonia</text><text class="plant" x="185" y="282">Miegamasis</text><text class="planm" x="185" y="302">12 m²</text><text class="plant" x="300" y="282">Tambūras</text><text class="plant" x="435" y="290">Miegamasis</text><text class="planm" x="435" y="310">13 m²</text>
+   <text class="planm" x="320" y="372">I aukštas · 112 m² · antra šviesa 30 m²</text><path d="M180 40v-14h120v14" class="plani"/><text class="planm" x="240" y="20">stiklinis frontonas</text></svg>`,
+ B:`<svg viewBox="0 0 640 400" aria-label="Namo Terasa planas"><path class="planw" d="M60 60H580V230H340V350H60Z"/>
+   <rect class="planr" x="60" y="60" width="280" height="170"/><rect class="planr" x="340" y="60" width="130" height="85"/><rect class="planr" x="470" y="60" width="110" height="85"/><rect class="planr" x="340" y="145" width="240" height="85"/><rect class="planr" x="60" y="230" width="140" height="120"/><rect class="planr" x="200" y="230" width="140" height="120"/>
+   <path class="plani" d="M340 60V350M340 145H580M470 60V145M60 230H340M200 230V350"/>
+   <text class="plant" x="200" y="140">Svetainė + virtuvė</text><text class="planm" x="200" y="160">56 m²</text><text class="plant" x="405" y="105">Miegamasis</text><text class="plant" x="525" y="105">Vaikų</text>
+   <text class="plant" x="460" y="190">Šeimininkų miegamasis</text><text class="planm" x="460" y="210">22 m²</text><text class="plant" x="130" y="292">Kabinetas</text><text class="plant" x="270" y="292">Vonia + sauna</text>
+   <rect x="360" y="250" width="200" height="90" fill="none" stroke="#7d867c" stroke-dasharray="6 6"/><text class="planm" x="460" y="300">terasa 34 m²</text><text class="planm" x="320" y="385">Vienas aukštas · 168 m²</text></svg>`};
+function buildTypes(){$('#types').innerHTML=['A','B'].map(k=>{const t=TYPES[k],ps=PL.filter(p=>p.type===k),fr=ps.filter(p=>p.status==='free');
+  return `<article class="type duskon" id="type${k}"><div class="view"><img src="${t.img}" alt="Namas „${t.name}“ dieną iš paukščio skrydžio" loading="lazy"><img class="dk" src="${t.dk}" alt="Namas „${t.name}“ vakare iš sodo pusės" loading="lazy">${PLANS[k]}
+    <div class="tabs" role="group" aria-label="Rodinys"><button type="button" data-v="2" aria-pressed="true">Vakaras</button><button type="button" data-v="0" aria-pressed="false">Diena</button><button type="button" data-v="1" aria-pressed="false">Planas</button></div></div>
+    <div class="b"><h3>${t.name}</h3><p>${t.text}</p><div class="spec"><div><b>${t.m2} m²</b><span>namas</span></div><div><b>${t.rooms}</b><span>kambariai</span></div><div><b>${fr.length} / ${ps.length}</b><span>laisvi</span></div><div><b>${Math.round(Math.min(...ps.map(p=>p.price))/1000)} k €</b><span>nuo</span></div></div></div></article>`}).join('');
+  $$('.type').forEach(c=>c.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{c.classList.toggle('planon',b.dataset.v==='1');c.classList.toggle('duskon',b.dataset.v==='2');c.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-pressed',x===b))}))}
+
+/* ---------- mortgage calculator (annuity) ---------- */
+function buildCalc(){$('#cplot').innerHTML=PL.filter(p=>p.status!=='sold').map(p=>`<option value="${p.id}">Sklypas ${p.id} · ${p.t.name} · ${eur(p.price)}</option>`).join('');
+  ['cplot','cdown','cyears','crate'].forEach(id=>$('#'+id).addEventListener('input',calc));calc()}
+function calc(){const p=PL.find(x=>x.id===+$('#cplot').value);if(!p)return;const d=+$('#cdown').value,y=+$('#cyears').value,r=+$('#crate').value;
+  const loan=p.price*(1-d/100),n=y*12,i=r/100/12,pay=loan*i/(1-Math.pow(1+i,-n)),total=pay*n,interest=total-loan;
+  $('#cdownv').textContent=`${d} % · ${eur(p.price*d/100)}`;$('#cyearsv').textContent=`${y} m.`;$('#cratev').textContent=`${r.toFixed(1).replace('.',',')} %`;
+  $('#cpay').textContent=eur(pay);$('#cb1').style.width=(loan/total*100)+'%';$('#cb2').style.width=(interest/total*100)+'%';
+  $('#ck1').textContent=`Paskola ${eur(loan)}`;$('#ck2').textContent=`Palūkanos ${eur(interest)}`;
+  $('#cnote').textContent=`Per ${y} metų iš viso grąžinsite ${eur(total)}. Skaičiavimas iliustracinis.`}
+
+/* ---------- booking: next 7 days, a few slots already taken ---------- */
+let BD=null,BT=null;
+function buildBooking(){const wd=['Sk','Pr','An','Tr','Kt','Pn','Št'],d0=new Date();const days=[];
+  for(let k=1;days.length<7;k++){const d=new Date(d0);d.setDate(d0.getDate()+k);days.push(d)}
+  $('#days').innerHTML=days.map((d,i)=>`<button type="button" data-i="${i}" aria-pressed="${!i}"><small>${wd[d.getDay()]}</small>${d.getDate()}.${String(d.getMonth()+1).padStart(2,'0')}</button>`).join('');
+  const T=['10:00','11:30','13:00','14:30','16:00','17:30'];
+  function slots(di){$('#slots').innerHTML=T.map((t,j)=>{const taken=(di*3+j*5)%7===0;return `<button type="button" data-t="${t}" ${taken?'disabled aria-disabled="true"':''} aria-pressed="false">${t}</button>`}).join('');BT=null;sel()}
+  function sel(){$('#bsel').textContent=BD&&BT?`Pasirinkta: ${BD.toLocaleDateString('lt-LT',{weekday:'long',month:'long',day:'numeric'})}, ${BT}`:'Pasirinkite dieną ir laiką'}
+  $('#days').onclick=e=>{const b=e.target.closest('button');if(!b)return;BD=days[+b.dataset.i];$$('#days button').forEach(x=>x.setAttribute('aria-pressed',x===b));slots(+b.dataset.i)};
+  $('#slots').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;BT=b.dataset.t;$$('#slots button').forEach(x=>x.setAttribute('aria-pressed',x===b));sel()};
+  BD=days[0];slots(0);
+  $('#bplot').innerHTML=`<option value="">Dar nežinau</option>`+PL.filter(p=>p.status!=='sold').map(p=>`<option value="${p.id}">Sklypas ${p.id} · ${p.t.name}</option>`).join('');
+  $('#bform').addEventListener('submit',e=>{e.preventDefault();const err=$('#berr');
+    if(!BT){err.textContent='Pasirinkite apžiūros laiką.';return}
+    if(!$('#bn').value.trim()){err.textContent='Įrašykite vardą.';$('#bn').focus();return}
+    if(!/^\+?[\d\s]{8,}$/.test($('#bp').value.trim())){err.textContent='Įrašykite telefono numerį, pvz., +370 600 00000.';$('#bp').focus();return}
+    err.textContent='';$('#okt').textContent=`Iki pasimatymo, ${$('#bn').value.trim().split(' ')[0]}!`;
+    $('#okp').textContent=`${BD.toLocaleDateString('lt-LT',{weekday:'long',month:'long',day:'numeric'})}, ${BT}. Susitinkame prie kvartalo vartų.`+($('#bplot').value?` Paruošime sklypo Nr. ${$('#bplot').value} dokumentus.`:'');
+    $('#book').classList.add('done')});
+  $('#again').onclick=()=>$('#book').classList.remove('done')}
+</script>
+</body>
+</html>

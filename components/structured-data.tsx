@@ -1,6 +1,6 @@
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
-const INSTAGRAM_URL = "https://www.instagram.com/by.azuolas/";
+import { INSTAGRAM_URL } from "@/lib/content";
 
 /**
  * Organization + WebSite rather than LocalBusiness/ProfessionalService.
@@ -18,9 +18,9 @@ const schema = {
       name: SITE_NAME,
       url: SITE_URL,
       description:
-        "Shopify parduotuvių, svetainių ir prekės ženklo identiteto kūrimas verslams Lietuvoje.",
+        "Nepriklausomas dizaineris: svetainės, Shopify parduotuvės ir logotipai verslams Lietuvoje.",
       logo: `${SITE_URL}/media/logo-mark.png`,
-      image: `${SITE_URL}/media/azuolas-sedi.png`,
+      image: `${SITE_URL}/img/og.jpg`,
       areaServed: { "@type": "Country", name: "Lietuva" },
       knowsLanguage: ["lt", "en"],
       sameAs: [INSTAGRAM_URL],

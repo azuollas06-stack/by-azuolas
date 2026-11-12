@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kirpykla Aušros 14</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
+<style>
+:root{--y:#ffd200;--k:#0d0d0d;--f:"Archivo","Arial Narrow",Arial,sans-serif;--px:max(16px,3vw,env(safe-area-inset-left,0px))}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;background:var(--y);color:var(--k);font:500 17px/1.45 var(--f);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--k);outline-offset:3px}
+.blk :focus-visible{outline-color:var(--y)}
+.w{padding-inline:var(--px);max-width:1600px;margin-inline:auto}
+.up{text-transform:uppercase}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px 20px;flex-wrap:wrap;padding-block:14px;border-bottom:3px solid var(--k);font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.01em}
+.top a{text-decoration:none}
+.top a:hover{text-decoration:underline}
+.st{background:var(--k);color:var(--y);padding:4px 9px}
+.st.closed{background:transparent;color:var(--k);box-shadow:inset 0 0 0 2px var(--k)}
+
+h1{width:max-content;margin:14px 0 0;font-weight:900;font-stretch:62%;line-height:.8;text-transform:uppercase;white-space:nowrap;font-size:22vw;letter-spacing:-.005em}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 30px;flex-wrap:wrap;padding-block:20px 26px}
+.intro p{margin:0;font-weight:800;font-stretch:75%;font-size:clamp(22px,2.6vw,34px);line-height:1.05;text-transform:uppercase;max-width:22ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 24px;background:var(--k);color:var(--y);font:800 18px var(--f);text-transform:uppercase;text-decoration:none;border:0;cursor:pointer}
+.btn:hover{background:#333}
+.btn:disabled{background:transparent;color:#6b5a00;box-shadow:inset 0 0 0 2px #6b5a00;cursor:not-allowed}
+
+h2{margin:0;padding-block:16px 10px;font-weight:900;font-stretch:62%;font-size:clamp(46px,7vw,104px);line-height:.85;text-transform:uppercase}
+section{padding-bottom:56px}
+.rows{list-style:none;margin:0;padding:0;border-top:3px solid var(--k)}
+.rows li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:0 20px;border-bottom:3px solid var(--k);padding-block:8px 6px}
+.rows .n{font-weight:800;font-stretch:72%;font-size:clamp(30px,5.2vw,74px);line-height:1;text-transform:uppercase}
+.rows .n small{font:600 15px/1 var(--f);font-stretch:100%;text-transform:none;margin-left:12px;white-space:nowrap;vertical-align:middle}
+.rows .p{font-weight:900;font-stretch:72%;font-size:clamp(30px,5.2vw,74px);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.under{display:flex;justify-content:space-between;gap:8px 24px;flex-wrap:wrap;font-weight:600;font-size:15px;padding-top:12px}
+
+.blk{background:var(--k);color:var(--y);padding-block:0 60px}
+.blk h2{padding-top:24px}
+.blk .lead{margin:0 0 30px;font-weight:600;font-size:17px;border-top:3px solid var(--y);padding-top:12px}
+.step{margin-bottom:28px}
+.step>b{display:block;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.ch{display:flex;flex-wrap:wrap;gap:8px}
+.ch button{appearance:none;background:transparent;color:var(--y);border:0;box-shadow:inset 0 0 0 2px var(--y);font:700 16px var(--f);text-transform:uppercase;padding:0 16px;min-height:48px;cursor:pointer}
+.ch button:hover{background:#2a2600}
+.ch button[aria-pressed="true"]{background:var(--y);color:var(--k)}
+.ch button:disabled{box-shadow:inset 0 0 0 2px #4a4200;color:#5e5400;cursor:not-allowed;background:transparent}
+.ch .day{display:flex;flex-direction:column;justify-content:center;align-items:center;line-height:1.05;min-width:64px;padding:8px 10px}
+.ch .day span{font-weight:900;font-stretch:72%;font-size:24px}
+.times button{min-width:84px;font-variant-numeric:tabular-nums;font-size:18px}
+.empty{margin:0;font-weight:600}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:640px}
+.form label{display:flex;flex-direction:column;gap:8px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+.form input{height:54px;border:0;background:var(--y);color:var(--k);font:600 18px var(--f);padding:0 14px;width:100%;border-radius:0}
+.sum{margin:24px 0 16px;font-weight:800;font-stretch:80%;font-size:clamp(22px,2.4vw,30px);line-height:1.15;text-transform:uppercase;max-width:30ch}
+.blk .btn{background:var(--y);color:var(--k)}
+.blk .btn:hover{background:#fff}
+.blk .btn:disabled{background:transparent;color:#5e5400;box-shadow:inset 0 0 0 2px #4a4200}
+.ok{display:none;margin-top:20px;max-width:640px;background:var(--y);color:var(--k);padding:14px 16px;font-weight:600}
+.ok.on{display:block}
+
+.hrs li.today{background:var(--k);color:var(--y);margin-inline:calc(var(--px) * -1);padding-inline:var(--px)}
+.find{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 40px;border-top:3px solid var(--k);padding-top:16px}
+.addr{margin:0;font-weight:900;font-stretch:62%;font-size:clamp(46px,6vw,90px);line-height:.88;text-transform:uppercase}
+.find p{margin:14px 0 0;font-weight:600;max-width:36ch}
+.map{width:100%;height:auto;display:block;border:3px solid var(--k)}
+
+footer{background:var(--k);color:var(--y);padding-block:18px 26px;font-weight:600;font-size:14px}
+footer .w{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px var(--px) max(10px,env(safe-area-inset-bottom,0px));background:var(--y);border-top:3px solid var(--k);display:none;transform:translateY(0);transition:transform .25s}
+.dock .btn{width:100%}
+.dock.hide{transform:translateY(110%)}
+@media(max-width:760px){
+  .dock{display:block}
+  body{padding-bottom:84px}
+  .find{grid-template-columns:1fr}
+  .form{grid-template-columns:1fr}
+  .rows .n small{display:block;margin:6px 0 0}
+  .top{font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.dock{transition:none}}
+</style>
+</head>
+<body>
+<header class="w">
+  <div class="top"><span>Aušros g. 14, Kaunas</span><span id="st" class="st">&nbsp;</span><a href="#registracija">+370 600 00000</a></div>
+  <h1 id="h1">Kirpykla</h1>
+  <div class="intro"><p>Vyrų ir vaikų kirpimas. Barzdos. Skutimas.</p><a class="btn" href="#registracija">Registruotis →</a></div>
+</header>
+
+<main>
+<section class="w" id="kainos" aria-labelledby="kh">
+  <h2 id="kh">Kainos</h2>
+  <ul class="rows" id="prices"></ul>
+  <div class="under"><span>Ilgiems plaukams kaina didesnė.</span><span>Kortele arba grynais.</span></div>
+</section>
+
+<section class="blk" id="registracija" aria-labelledby="rh"><div class="w">
+  <h2 id="rh">Registracija</h2>
+  <p class="lead">Patvirtinimas ateis SMS žinute. Atšaukti galima paskambinus.</p>
+  <div class="step"><b>Paslauga</b><div class="ch" id="svc"></div></div>
+  <div class="step"><b>Diena</b><div class="ch" id="days"></div></div>
+  <div class="step"><b id="tlab">Laikas</b><div class="ch times" id="times"></div></div>
+  <div class="form"><label>Vardas<input id="nm" autocomplete="given-name"></label><label>Telefonas<input id="ph" type="tel" autocomplete="tel" inputmode="tel"></label></div>
+  <p class="sum" id="sum">Pasirinkite laiką.</p>
+  <button class="btn" type="button" id="go" disabled>Rezervuoti</button>
+  <div class="ok" id="ok" role="status"></div>
+</div></section>
+
+<section class="w" id="laikas" aria-labelledby="lh">
+  <h2 id="lh">Darbo laikas</h2>
+  <ul class="rows hrs" id="hours"></ul>
+</section>
+
+<section class="w" id="rasti" aria-labelledby="ah">
+  <h2 id="ah">Kaip rasti</h2>
+  <div class="find">
+    <div>
+      <p class="addr">Aušros g. 14<br>Kaunas</p>
+      <p>Įėjimas iš kiemo, rudos durys šalia vaistinės. Kieme galima palikti automobilį.</p>
+    </div>
+    <svg class="map" viewBox="0 0 400 250" role="img" aria-label="Schema: Aušros gatvė tarp Savanorių prospekto ir Vaižganto gatvės">
+      <g stroke="#0d0d0d" stroke-linecap="square" fill="none">
+        <path d="M-10 64 L410 36" stroke-width="16"/><path d="M118 -10 L148 260" stroke-width="10"/>
+        <path d="M-10 186 C120 172 260 196 410 166" stroke-width="10"/><path d="M302 -10 L282 260" stroke-width="7"/>
+      </g>
+      <g font-family="Archivo,Arial,sans-serif" font-weight="800" font-size="12" fill="#0d0d0d">
+        <text x="168" y="28" transform="rotate(-4 168 28)">SAVANORIŲ PR.</text>
+        <text x="40" y="122">AUŠROS G.</text>
+        <text x="16" y="168">VAIŽGANTO G.</text>
+        <text x="270" y="140" transform="rotate(-86 270 140)">KALNIEČIŲ G.</text>
+      </g>
+      <rect x="146" y="100" width="56" height="34" fill="#0d0d0d"/>
+      <text x="174" y="122" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-weight="900" font-size="14" fill="#ffd200">14</text>
+    </svg>
+  </div>
+</section>
+</main>
+
+<footer><div class="w"><span>Kirpykla Aušros 14 · Koncepcinis projektas, kirpykla išgalvota</span><span>Svetainė: by-azuolas</span></div></footer>
+<div class="dock" id="dock"><a class="btn" href="#registracija">Registruotis →</a></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const SVC=[
+  {n:'Kirpimas',m:45,p:25},
+  {n:'Mašinėle',m:30,p:18},
+  {n:'Barzda',m:30,p:15},
+  {n:'Kirpimas + barzda',m:75,p:36},
+  {n:'Skutimas',m:45,p:28},
+  {n:'Vaikams iki 12 m.',m:30,p:15}];
+const OPEN={0:null,1:null,2:[10,19],3:[10,19],4:[12,20],5:[10,19],6:[9,15]};
+const WD=['Sekmadienis','Pirmadienis','Antradienis','Trečiadienis','Ketvirtadienis','Penktadienis','Šeštadienis'];
+const WS=['Sk','Pr','An','Tr','Kt','Pn','Št'];
+const MON=['sausio','vasario','kovo','balandžio','gegužės','birželio','liepos','rugpjūčio','rugsėjo','spalio','lapkričio','gruodžio'];
+const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+
+// headline fills the full width exactly
+function fit(){const h=$('#h1'),w=h.parentElement.clientWidth-parseFloat(getComputedStyle(h.parentElement).paddingLeft)*2;h.style.fontSize='100px';h.style.fontSize=(100*w/h.offsetWidth).toFixed(2)+'px'}
+fit();document.fonts&&document.fonts.ready.then(fit);addEventListener('resize',fit);
+
+$('#prices').innerHTML=SVC.map(s=>`<li><span class="n">${s.n}<small>${s.m} min.</small></span><span class="p">${s.p}&nbsp;€</span></li>`).join('');
+
+function vilnius(){const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Vilnius',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+  const g=t=>+p.find(x=>x.type===t).value;return{y:g('year'),mo:g('month')-1,d:g('day'),h:g('hour'),mi:g('minute')}}
+function dayAt(off){const v=vilnius();return new Date(Date.UTC(v.y,v.mo,v.d+off))}
+function status(){const v=vilnius(),wd=dayAt(0).getUTCDay(),o=OPEN[wd],now=v.h*60+v.mi,el=$('#st');
+  if(o&&now>=o[0]*60&&now<o[1]*60){el.className='st';el.textContent=`Atidaryta iki ${o[1]}:00`;return}
+  let k=o&&now<o[0]*60?0:1;while(!OPEN[dayAt(k).getUTCDay()])k++;const w=dayAt(k).getUTCDay();
+  el.className='st closed';el.textContent=`Uždaryta · ${k===0?'šiandien':k===1?'rytoj':WS[w]} nuo ${OPEN[w][0]}:00`}
+status();setInterval(status,30000);
+
+$('#hours').innerHTML=[2,3,4,5,6,0,1].map(w=>`<li${w===dayAt(0).getUTCDay()?' class="today"':''}><span class="n">${WD[w]}</span><span class="p">${OPEN[w]?OPEN[w][0]+'–'+OPEN[w][1]:'Uždaryta'}</span></li>`).join('');
+
+// booking: 15-minute grid, busy blocks seeded from the date so they stay put between visits
+let S=0,D=null,T=null;
+function rnd(seed){return()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}}
+function busy(date){const o=OPEN[date.getUTCDay()],r=rnd(date.getUTCFullYear()*400+date.getUTCMonth()*31+date.getUTCDate()),b=[];
+  for(let t=o[0]*60;t<o[1]*60;){const len=[30,45,45,75][Math.floor(r()*4)];if(r()<.42)b.push([t,t+len]);t+=len+(r()<.4?15:0)}
+  b.push([13*60+30,14*60]);return b}
+function free(date,mins){const o=OPEN[date.getUTCDay()],b=busy(date),out=[],v=vilnius(),today=dayAt(0).getTime()===date.getTime();
+  for(let t=o[0]*60;t+mins<=o[1]*60;t+=15){if(today&&t<v.h*60+v.mi+60)continue;if(!b.some(([a,e])=>t<e&&a<t+mins))out.push(t)}return out}
+const DAYS=[];for(let k=0;DAYS.length<10;k++){const d=dayAt(k);if(OPEN[d.getUTCDay()])DAYS.push(d)}
+function render(){
+  $('#svc').innerHTML=SVC.map((s,i)=>`<button type="button" aria-pressed="${i===S}" data-i="${i}">${s.n}</button>`).join('');
+  $('#svc').querySelectorAll('button').forEach(b=>b.onclick=()=>{S=+b.dataset.i;T=null;render()});
+  if(D==null||!free(DAYS[D],SVC[S].m).length){const f=DAYS.findIndex(d=>free(d,SVC[S].m).length);D=f<0?0:f}
+  $('#days').innerHTML=DAYS.map((d,i)=>{const n=free(d,SVC[S].m).length;return `<button type="button" class="day" aria-pressed="${D===i}" data-i="${i}" ${n?'':'disabled'} aria-label="${WD[d.getUTCDay()]}, ${MON[d.getUTCMonth()]} ${d.getUTCDate()} d.${n?'':', laisvų laikų nėra'}">${WS[d.getUTCDay()]}<span>${d.getUTCDate()}</span></button>`}).join('');
+  $('#days').querySelectorAll('button').forEach(b=>b.onclick=()=>{D=+b.dataset.i;T=null;render()});
+  const d=DAYS[D],ts=free(d,SVC[S].m);
+  $('#tlab').textContent=`Laikas · ${WD[d.getUTCDay()]}, ${MON[d.getUTCMonth()]} ${d.getUTCDate()} d.`;
+  $('#times').innerHTML=ts.length?ts.map(t=>`<button type="button" aria-pressed="${T===t}" data-t="${t}">${hm(t)}</button>`).join(''):'<p class="empty">Šią dieną laisvų laikų nebėra.</p>';
+  $('#times').querySelectorAll('button').forEach(b=>b.onclick=()=>{T=+b.dataset.t;render()});
+  const s=SVC[S];$('#sum').innerHTML=T==null?'Pasirinkite laiką.':`${s.n} · ${WS[d.getUTCDay()]} ${d.getUTCDate()} d. ${hm(T)} · ${s.p}&nbsp;€`;
+  check()}
+function check(){$('#go').disabled=!(T!=null&&$('#nm').value.trim()&&$('#ph').value.replace(/\D/g,'').length>=8)}
+$('#nm').oninput=check;$('#ph').oninput=check;
+$('#go').onclick=()=>{const o=$('#ok');o.textContent=`Ačiū, ${$('#nm').value.trim()}. Tai koncepcinis projektas, todėl rezervacija niekur neišsiųsta. Tikroje svetainėje čia ateitų SMS.`;o.classList.add('on')};
+render();
+// hide the phone dock while the booking block or footer is on screen
+const dock=$('#dock'),vis=new Set();
+const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?vis.add(e.target):vis.delete(e.target));dock.classList.toggle('hide',vis.size>0)});io.observe($('#registracija'));io.observe($('.intro .btn'));
+</script>
+</body>
+</html>

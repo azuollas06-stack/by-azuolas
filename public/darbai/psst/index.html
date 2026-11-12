@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PŠŠT! — lietuviški gazuoti gėrimai</title>
+<meta name="description" content="PŠŠT! – gazuoti gėrimai su rabarbarais, šaltalankiais, mėtomis ir juodaisiais serbentais. Koncepcinis projektas.">
+<style>
+/* PŠŠT! — loud on purpose. One flavour owns the whole page at a time (bg, ink, accent),
+   everything else (type, bubbles, confetti, the can) re-tints when you switch. */
+@font-face{font-family:"Arch";font-weight:100 900;font-stretch:62% 125%;font-display:swap;src:url(fonts/archivo-latin-wdth-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+2013-2014,U+2018-201E,U+2026,U+20AC}
+@font-face{font-family:"Arch";font-weight:100 900;font-stretch:62% 125%;font-display:swap;src:url(fonts/archivo-latin-ext-wdth-normal.woff2) format("woff2");unicode-range:U+0100-024F}
+@font-face{font-family:"Mono";font-display:swap;src:url(fonts/jetbrains-mono-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF}
+@font-face{font-family:"Mono";font-display:swap;src:url(fonts/jetbrains-mono-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-024F}
+:root{--bg:#ff5d8f;--ink:#4a0721;--acc:#ffd3e1;--alt:#7bd389;--gr:clamp(18px,4vw,48px);--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 18px/1.5 "Arch",system-ui,sans-serif;font-stretch:100%;-webkit-font-smoothing:antialiased;overflow-x:clip;transition:background .6s var(--ease),color .6s var(--ease)}
+img{display:block;max-width:100%;-webkit-user-drag:none;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer}
+.x{font-weight:900;font-stretch:125%;letter-spacing:-.02em;line-height:.86;text-transform:uppercase}
+.mono{font-family:"Mono",monospace;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.wrap{padding-inline:var(--gr);max-width:1500px;margin-inline:auto}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* custom cursor (fine pointers only) */
+.cur{position:fixed;left:0;top:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:var(--ink);pointer-events:none;z-index:200;transition:width .25s var(--spring),height .25s var(--spring),margin .25s var(--spring),background .4s;mix-blend-mode:normal}
+.cur.big{width:64px;height:64px;margin:-32px 0 0 -32px;background:var(--acc);mix-blend-mode:multiply}
+@media (pointer:coarse){.cur{display:none}}
+
+/* header */
+.top{position:fixed;inset:0 0 auto;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:14px var(--gr);pointer-events:none}
+.top>*{pointer-events:auto}
+.logo{font-size:28px;text-decoration:none;color:var(--ink);display:inline-block;transition:transform .3s var(--spring)}
+.logo:hover{transform:rotate(-6deg) scale(1.08)}
+.top nav{display:flex;gap:6px;background:var(--ink);border-radius:999px;padding:6px}
+.top nav a{color:var(--bg);text-decoration:none;font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;transition:background .2s,color .2s}
+.top nav a:hover{background:var(--acc);color:var(--ink)}
+.cartb{appearance:none;border:0;background:var(--ink);color:var(--bg);height:48px;padding:0 18px 0 16px;border-radius:999px;display:flex;align-items:center;gap:10px;font-weight:800}
+.cartb b{background:var(--acc);color:var(--ink);min-width:28px;height:28px;border-radius:999px;display:grid;place-items:center;font-size:14px;padding:0 6px}
+.cartb.bump b{animation:bump .5s var(--spring)}
+@keyframes bump{30%{transform:scale(1.5) rotate(-10deg)}}
+@media(max-width:820px){.top nav{display:none}}
+
+/* hero */
+.hero{position:relative;height:100vh;height:100svh;min-height:640px;overflow:hidden}
+#fizz{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.word{position:absolute;left:0;right:0;top:50%;margin:0;transform:translateY(-62%);display:flex;justify-content:center;font-size:min(23vw,44vh);color:var(--acc);z-index:0;white-space:nowrap}
+.word span{display:inline-block;transition:transform .45s var(--spring),color .6s}
+.word span:hover{transform:translateY(-8%) rotate(-6deg)}
+.hero.in .word span{animation:drop .9s var(--spring) both}
+@keyframes drop{from{transform:translateY(-80vh) rotate(-20deg)}}
+.stage{position:absolute;left:50%;top:50%;width:min(50vh,58vw);aspect-ratio:2/3;transform:translate(-50%,-55%);z-index:3;cursor:grab;touch-action:pan-y}
+.stage:active{cursor:grabbing}
+.stage img{width:100%;height:100%;object-fit:contain}
+.stage .shadow{position:absolute;left:12%;right:12%;bottom:1%;height:7%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.35),transparent);z-index:-1;filter:blur(4px)}
+.stage.shake img{animation:shake .5s}
+@keyframes shake{20%{transform:rotate(-6deg) translateY(-6px)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
+.stage.swap img{animation:spinin .7s var(--spring)}
+@keyframes spinin{from{transform:translateY(40px) scale(.7) rotate(-14deg);opacity:0}}
+.spr{position:absolute;z-index:2;pointer-events:none;width:clamp(64px,8.5vw,140px);transition:opacity .5s}
+.spr img{width:100%;animation:bob 6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-14px) rotate(6deg)}}
+.hero .ctl{position:absolute;left:var(--gr);right:var(--gr);bottom:64px;z-index:5;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{appearance:none;border:0;display:flex;align-items:center;gap:10px;height:50px;padding:0 18px 0 8px;border-radius:999px;background:rgba(255,255,255,.42);color:var(--ink);font-weight:800;font-size:15px;transition:transform .3s var(--spring),background .3s}
+.chip i{width:34px;height:34px;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(0,0,0,.12)}
+.chip:hover{transform:translateY(-3px) rotate(-2deg)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.open{appearance:none;border:0;height:64px;padding:0 30px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:20px;font-weight:900;font-stretch:125%;text-transform:uppercase;letter-spacing:.02em;box-shadow:0 8px 0 rgba(0,0,0,.25);transition:transform .15s,box-shadow .15s}
+.open:hover{transform:translateY(-2px);box-shadow:0 10px 0 rgba(0,0,0,.25)}
+.open:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.badge{position:absolute;right:calc(var(--gr) + 10px);top:96px;width:clamp(110px,12vw,160px);z-index:4;animation:spin 14s linear infinite}
+.badge text{font:800 11.5px "Arch";font-stretch:125%;letter-spacing:.14em;fill:var(--ink)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hint{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);z-index:4;opacity:.75;white-space:nowrap}
+.flood{position:fixed;inset:0;z-index:40;pointer-events:none}
+.pop{position:absolute;z-index:6;font-size:min(14vw,140px);color:var(--ink);pointer-events:none;white-space:nowrap}
+@media(max-width:700px){.stage{width:min(62vw,40vh);transform:translate(-50%,-62%)}.hero .ctl{bottom:56px}.word{font-size:24vw;transform:translateY(-90%)}.open{height:56px;font-size:17px;width:100%}.chip{height:44px;font-size:13px}.chip i{width:28px;height:28px}.badge{top:80px;width:96px}.hint{display:none}}
+
+/* marquee */
+.mq{background:var(--ink);color:var(--acc);transform:rotate(-2.5deg) scale(1.04);padding:18px 0;overflow:hidden;position:relative;z-index:5;margin-block:-30px}
+.mq .row{display:flex;white-space:nowrap;font-size:clamp(34px,6vw,84px);will-change:transform}
+.mq .row span{padding-right:.5em}
+.mq .row span:nth-child(even){color:transparent;-webkit-text-stroke:2px var(--acc)}
+
+/* horizontal flavours */
+.hz{position:relative;height:420vh}
+.hz .st{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.hz .track{display:flex;height:100%;will-change:transform}
+.panel{flex:none;width:100vw;height:100%;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;padding:110px var(--gr) 60px;gap:30px;position:relative;overflow:hidden}
+.panel h3{font-size:clamp(46px,6.8vw,128px);font-stretch:112%;margin:0}
+.panel p{max-width:34ch;font-size:clamp(17px,1.6vw,22px);margin:26px 0}
+.panel .can{height:min(70vh,640px);justify-self:center;filter:drop-shadow(0 40px 40px rgba(0,0,0,.25));transition:transform .5s var(--spring)}
+.panel:hover .can{transform:rotate(-6deg) scale(1.03)}
+.panel .num{position:absolute;right:var(--gr);top:96px}
+.panel .bg2{position:absolute;inset:auto -10% -40% auto;width:70vw;aspect-ratio:1;border-radius:50%;opacity:.5;z-index:0}
+.panel>*{position:relative;z-index:1}
+.buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.buy .pr{font-size:34px;font-weight:900;font-stretch:125%}
+.add{appearance:none;border:0;height:56px;padding:0 26px;border-radius:999px;font-weight:900;font-size:17px;text-transform:uppercase;font-stretch:115%;transition:transform .2s var(--spring)}
+.add:hover{transform:scale(1.06) rotate(-2deg)}.add:active{transform:scale(.95)}
+@media(max-width:800px){.panel{grid-template-columns:1fr;grid-template-rows:auto 1fr;padding-top:90px;text-align:left}.panel .can{height:42vh;order:-1}.panel p{margin:14px 0}.panel h3{font-size:11.5vw}}
+
+/* facts */
+.facts{padding-block:clamp(90px,12vw,160px)}
+.facts h2{font-size:clamp(48px,8vw,130px);margin:0 0 50px}
+.fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;perspective:900px}
+@media(max-width:900px){.fgrid{grid-template-columns:1fr 1fr}}
+.fact{background:var(--ink);color:var(--bg);border-radius:28px;padding:28px 24px 30px;min-height:250px;display:flex;flex-direction:column;justify-content:space-between;transform-style:preserve-3d;transition:transform .2s ease-out}
+.fact b{font-size:clamp(56px,7vw,104px);font-weight:900;font-stretch:125%;line-height:.9;color:var(--acc);font-variant-numeric:tabular-nums}
+.fact:nth-child(2){background:var(--acc);color:var(--ink)}.fact:nth-child(2) b{color:var(--ink)}
+.fact:nth-child(3){background:var(--alt);color:var(--ink)}.fact:nth-child(3) b{color:var(--ink)}
+@media(max-width:600px){.fact{min-height:190px;border-radius:22px;padding:20px}}
+
+/* box builder */
+.box{padding-block:clamp(80px,10vw,140px);background:var(--ink);color:var(--bg)}
+.box h2{font-size:clamp(46px,7vw,112px);margin:0}
+.box .sub{max-width:44ch;margin:18px 0 40px;color:var(--acc)}
+.bgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(24px,5vw,70px);align-items:start}
+@media(max-width:900px){.bgrid{grid-template-columns:1fr}}
+.crate{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;background:rgba(255,255,255,.07);border-radius:28px;padding:16px}
+.slot{aspect-ratio:2/3;border-radius:16px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.14);display:grid;place-items:center;position:relative;overflow:hidden}
+.slot img{height:96%;animation:land .55s var(--spring)}
+@keyframes land{from{transform:translateY(-140%) rotate(-25deg)}}
+.slot button{position:absolute;inset:0;background:transparent;border:0;border-radius:16px}
+.slot button:hover{background:rgba(255,255,255,.12)}
+.picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(max-width:600px){.crate{gap:6px;padding:10px;border-radius:20px}.slot{border-radius:10px}.pk{padding:12px;font-size:15px}.pk img{width:28px}}
+.pk{appearance:none;border:0;border-radius:20px;padding:16px;text-align:left;font-weight:800;color:#111;display:flex;align-items:center;gap:12px;transition:transform .2s var(--spring)}
+.pk img{width:38px}
+.pk:hover{transform:translateY(-3px) rotate(-1.5deg)}.pk:active{transform:scale(.96)}
+.pk small{display:block;font:400 12px "Mono";opacity:.7}
+.prog{height:16px;border-radius:999px;background:rgba(255,255,255,.12);margin:26px 0 12px;display:flex;overflow:hidden}
+.prog i{height:100%;transition:width .4s var(--spring)}
+.tot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:18px}
+.tot b{font-size:40px;font-weight:900;font-stretch:125%}
+.go{appearance:none;border:0;height:60px;padding:0 28px;border-radius:999px;background:var(--acc);color:var(--ink);font-weight:900;font-size:18px;text-transform:uppercase;font-stretch:115%}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.clear{appearance:none;background:transparent;border:0;color:var(--acc);text-decoration:underline;font-size:15px}
+
+footer{padding:clamp(60px,8vw,110px) 0 30px;overflow:hidden}
+.big{font-size:clamp(90px,26vw,420px);display:flex;justify-content:center}
+.big span{display:inline-block;transition:transform .5s var(--spring)}
+.big span:hover{transform:translateY(-12%) scaleY(1.15) rotate(4deg)}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:30px}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:60;opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:var(--bg);z-index:61;transform:translateX(105%);transition:transform .5s var(--ease),background .6s;display:flex;flex-direction:column;padding:22px;box-shadow:-30px 0 80px rgba(0,0,0,.25)}
+body.cart .scrim{opacity:1;visibility:visible;transition:opacity .3s}
+body.cart .drawer{transform:none}
+.drawer h3{font-size:44px;margin:0}
+.drawer .x2{position:absolute;right:16px;top:16px;width:46px;height:46px;border-radius:50%;border:0;background:var(--ink);color:var(--bg);font-size:22px}
+.items{flex:1;overflow:auto;margin:20px 0;display:flex;flex-direction:column;gap:10px}
+.it{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.4);border-radius:18px;padding:10px 14px}
+.it img{width:44px}.it b{flex:1}
+.ship{font-size:15px;margin-bottom:10px}
+.drawer .go{width:100%;background:var(--ink);color:var(--bg)}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:120}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="cur" id="cur" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<header class="top">
+  <a class="logo x" href="#" aria-label="PŠŠT! — į pradžią">PŠŠT!</a>
+  <nav aria-label="Pagrindinis"><a href="#skoniai">Skoniai</a><a href="#kodel">Kodėl</a><a href="#deze">Sudėk dėžę</a></nav>
+  <button class="cartb" id="cartb" type="button" aria-label="Krepšelis"><span>Krepšelis</span><b id="cnt">0</b></button>
+</header>
+
+<main>
+<section class="hero" id="hero" aria-label="PŠŠT! skardinė">
+  <canvas id="fizz" aria-hidden="true"></canvas>
+  <h1 class="word x" id="word" aria-label="PŠŠT!"><span>P</span><span>Š</span><span>Š</span><span>T</span><span>!</span></h1>
+  <div id="sprites" aria-hidden="true"></div>
+  <div class="stage" id="stage" role="img" aria-label="Skardinė – tempk, kad pasuktum"><div class="shadow"></div><img id="canimg" alt="" draggable="false"><span class="hint mono" aria-hidden="true">← tempk →</span></div>
+  <svg class="badge" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="c" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0"/></defs><circle cx="100" cy="100" r="98" fill="var(--acc)"/><text><textPath href="#c">MAŽAI CUKRAUS · TIKRI SKONIAI · ŠALTA · </textPath></text><text x="100" y="114" text-anchor="middle" style="font-size:40px;letter-spacing:0">!</text></svg>
+  <div class="ctl">
+    <div class="chips" role="group" aria-label="Skonis" id="chips"></div>
+    <button class="open" id="open" type="button">Atidaryk</button>
+  </div>
+</section>
+
+<div class="mq" aria-hidden="true"><div class="row x" id="mq1"></div></div>
+
+<section class="hz" id="skoniai" aria-label="Keturi skoniai">
+  <div class="st"><div class="track" id="track"></div></div>
+</section>
+
+<section class="facts wrap" id="kodel" aria-labelledby="fh">
+  <h2 class="x" id="fh">Kodėl<br>PŠŠT!</h2>
+  <div class="fgrid" id="facts">
+    <div class="fact"><b data-to="4">0</b><span>lietuviški skoniai – nuo rabarbarų iki juodųjų serbentų</span></div>
+    <div class="fact"><b data-to="5">0</b><span>gramai cukraus 100 ml. Saldu tiek, kiek reikia.</span></div>
+    <div class="fact"><b data-to="0">0</b><span>dirbtinių dažiklių. Spalva – iš uogų ir daržovių.</span></div>
+    <div class="fact"><b data-to="330">0</b><span>mililitrų šalto burbuliavimo kiekvienoje skardinėje</span></div>
+  </div>
+</section>
+
+<section class="box" id="deze" aria-labelledby="bh">
+  <div class="wrap">
+    <h2 class="x" id="bh">Sudėk savo dėžę</h2>
+    <p class="sub">12 skardinių, bet kokiu santykiu. Paspausk skonį – skardinė įkris į dėžę. Paspausk ant skardinės dėžėje – iškris.</p>
+    <div class="bgrid">
+      <div><div class="crate" id="crate"></div><div class="prog" id="prog" aria-hidden="true"></div><p class="mono" id="bstat" aria-live="polite">0 / 12</p></div>
+      <div>
+        <div class="picks" id="picks"></div>
+        <div class="tot"><div><b id="btot">0,00 €</b><div class="mono">1,80 € / skardinė</div></div><button class="go" id="bgo" type="button" disabled>Į krepšelį</button></div>
+        <p><button class="clear" id="bclr" type="button">Išvalyti dėžę</button></p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="big x" id="big" aria-hidden="true"><span>P</span><span>Š</span><span>Š</span><span>T</span><span>!</span></div>
+  <div class="wrap foot"><span>© 2026 PŠŠT! · Koncepcinis projektas</span><span>Dizainas, 3D ir kodas — by-azuolas</span></div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Krepšelis" aria-hidden="true">
+  <button class="x2" id="x2" type="button" aria-label="Uždaryti">×</button>
+  <h3 class="x">Krepšelis</h3>
+  <div class="items" id="items"></div>
+  <p class="ship" id="ship"></p>
+  <button class="go" type="button" id="checkout">Apmokėti</button>
+</aside>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FL=[
+ {id:'rabarbaras',name:'Rabarbaras',bg:'#ff5d8f',ink:'#4a0721',acc:'#ffd3e1',alt:'#7bd389',spr:['rhubarb_1','rhubarb_2','rhubarb_3'],note:'Rūgštus kaip pirmas birželio kąsnis iš močiutės daržo. Rožinis, gaivus, šiek tiek išdykęs.'},
+ {id:'saltalankis',name:'Šaltalankis',bg:'#ff8a1c',ink:'#3d1600',acc:'#ffe08a',alt:'#5f8a4e',spr:['buckthorn_1','buckthorn_2','buckthorn_3'],note:'Oranžinė uoga, kurią visi žino, bet retas ragavo šaltą. Saulė, rūgštelė ir truputis medaus.'},
+ {id:'meta',name:'Mėta & laimas',bg:'#2fd08a',ink:'#053b24',acc:'#e2ff5c',alt:'#ffffff',spr:['mint_1','lime_1','mint_2'],note:'Šviežiai skintos mėtos ir laimo žievelė. Gerti per karščius, prie ežero, iš karto po pirties.'},
+ {id:'serbentas',name:'Juodieji serbentai',bg:'#7a3cff',ink:'#17053d',acc:'#ff7ad9',alt:'#c9b6ff',spr:['currant_1','currant_2','currant_3'],note:'Tamsus, sodrus, beveik vynas – tik be laipsnių. Uogos iš Dzūkijos krūmų.'}];
+const PRICE=1.8, NF=36; let F=0, heroVis=true;
+new IntersectionObserver(es=>es.forEach(e=>{heroVis=e.isIntersecting}),{}).observe(document.getElementById('hero'));
+const eur=v=>v.toFixed(2).replace('.',',')+' €';
+const turn=(f,i)=>`turn/${f}/${String(i+1).padStart(2,'0')}.webp`;
+function setVars(f){const r=document.documentElement.style;r.setProperty('--bg',f.bg);r.setProperty('--ink',f.ink);r.setProperty('--acc',f.acc);r.setProperty('--alt',f.alt);}
+
+/* ---------- cursor ---------- */
+const cur=$('#cur');let mx=innerWidth/2,my=innerHeight/2,cx=mx,cy=my;
+addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;cur.classList.toggle('big',!!e.target.closest('button,a,.stage'))});
+(function loop(){cx+=(mx-cx)*.22;cy+=(my-cy)*.22;cur.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(loop)})();
+
+/* ---------- can spinner ---------- */
+const cache={};
+function preload(f){if(cache[f])return cache[f];cache[f]=[...Array(NF)].map((_,i)=>{const im=new Image();im.src=turn(f,i);im.decode&&im.decode().catch(()=>{});return im});return cache[f]}
+const canimg=$('#canimg'),stage=$('#stage');let ang=0,vel=0,drag=false,lx=0,idle=0;
+preload(FL[0].id);canimg.src=turn(FL[0].id,0);
+stage.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;stage.setPointerCapture(e.pointerId);idle=0});
+stage.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-lx;lx=e.clientX;vel=-dx/9;ang+=vel});
+addEventListener('pointerup',()=>{drag=false});
+let lastT=performance.now();
+function spin(t){const dt=Math.min(.05,(t-lastT)/1000);lastT=t;
+  if(!drag){vel*=.94;ang+=vel;if(Math.abs(vel)<.05&&!RM&&t>2200)ang+=dt*7}
+  if(!heroVis){requestAnimationFrame(spin);return}const fr=((Math.round(ang)%NF)+NF)%NF;const im=cache[FL[F].id][fr];if(im.complete&&canimg.dataset.k!==F+'_'+fr){canimg.src=im.src;canimg.dataset.k=F+'_'+fr}
+  requestAnimationFrame(spin)}
+requestAnimationFrame(spin);
+
+/* ---------- floating ingredients (parallax) ---------- */
+const SPOTS=[[.16,.24,1.1,-14],[.8,.62,.9,12],[.12,.7,.75,22],[.86,.2,.7,-20],[.66,.82,.55,8],[.3,.86,.5,-6]];
+const sprWrap=$('#sprites');
+function buildSprites(){sprWrap.innerHTML=SPOTS.map(([x,y,s,r],i)=>`<div class="spr" data-d="${s}" style="left:${x*100}%;top:${y*100}%;transform:translate(-50%,-50%) scale(${s}) rotate(${r}deg)"><img src="spr/${FL[F].spr[i%3]}.webp" alt="" style="animation-delay:${-i*1.3}s;animation-duration:${5+i}s"></div>`).join('')}
+buildSprites();
+addEventListener('pointermove',e=>{if(RM)return;const dx=(e.clientX/innerWidth-.5),dy=(e.clientY/innerHeight-.5);
+  $$('.spr').forEach(s=>{const d=+s.dataset.d;s.style.translate=`${-dx*60*d}px ${-dy*40*d}px`});$('#word').style.translate=`${dx*18}px ${dy*10}px`});
+
+/* ---------- flavour switch: colour floods from the click ---------- */
+const chips=$('#chips');
+chips.innerHTML=FL.map((f,i)=>`<button class="chip" type="button" aria-pressed="${!i}" data-i="${i}"><i style="background:${f.bg}"></i>${f.name}</button>`).join('');
+function choose(i,ev){if(i===F)return;const f=FL[i];preload(f.id);
+  const x=ev&&ev.clientX?ev.clientX:innerWidth/2,y=ev&&ev.clientY?ev.clientY:innerHeight/2;
+  const fl=document.createElement('div');fl.className='flood';fl.style.background=f.bg;document.body.appendChild(fl);
+  const R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+  const done=()=>{F=i;setVars(f);buildSprites();stage.classList.remove('swap');void stage.offsetWidth;stage.classList.add('swap');fl.remove()};
+  if(RM){done();}else fl.animate([{clipPath:`circle(0px at ${x}px ${y}px)`},{clipPath:`circle(${R}px at ${x}px ${y}px)`}],{duration:650,easing:'cubic-bezier(.7,0,.2,1)'}).onfinish=done;
+  $$('.chip').forEach(c=>c.setAttribute('aria-pressed',+c.dataset.i===i));burst(x,y,30)}
+chips.addEventListener('click',e=>{const c=e.target.closest('.chip');if(c)choose(+c.dataset.i,e)});
+
+/* ---------- bubbles ---------- */
+const fz=$('#fizz'),g=fz.getContext('2d');let B=[];
+function fsize(){const d=Math.min(devicePixelRatio||1,2);fz.width=fz.clientWidth*d;fz.height=fz.clientHeight*d;g.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',fsize);fsize();
+function bubble(x,y,fast){return{x,y,r:2+Math.random()*(fast?9:7),v:(fast?3:0.6)+Math.random()*1.4,w:Math.random()*6,ph:Math.random()*6,life:1}}
+for(let i=0;i<70;i++)B.push(bubble(Math.random()*innerWidth,Math.random()*innerHeight));
+function burst(x,y,n){const r=$('#hero').getBoundingClientRect();for(let i=0;i<n;i++){const b=bubble(x-r.left+(Math.random()-.5)*60,y-r.top,true);b.vx=(Math.random()-.5)*6;B.push(b)}}
+function fizzLoop(t){if(!heroVis){requestAnimationFrame(fizzLoop);return}const W=fz.clientWidth,H=fz.clientHeight;g.clearRect(0,0,W,H);
+  for(const b of B){b.y-=b.v;b.x+=Math.sin(t/600+b.ph)*.4+(b.vx||0);if(b.vx)b.vx*=.96;if(b.v>2)b.v*=.985;
+    if(b.y<-20){if(B.length>90){b.life=0;continue}b.y=H+10;b.x=Math.random()*W;b.v=.6+Math.random()*1.4;b.vx=0}
+    g.beginPath();g.arc(b.x,b.y,b.r,0,7);g.strokeStyle='rgba(255,255,255,.75)';g.lineWidth=1.5;g.stroke();
+    g.beginPath();g.arc(b.x-b.r*.35,b.y-b.r*.35,b.r*.25,0,7);g.fillStyle='rgba(255,255,255,.9)';g.fill()}
+  B=B.filter(b=>b.life);if(!RM)requestAnimationFrame(fizzLoop)}
+requestAnimationFrame(fizzLoop);
+
+/* ---------- open the can: sound + shake + burst + giant word ---------- */
+let AC=null;
+function fizzSound(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime,sr=AC.sampleRate,len=sr*1.6;
+  const buf=AC.createBuffer(1,len,sr),d=buf.getChannelData(0);for(let i=0;i<len;i++){const c=Math.random()<.004?(Math.random()*2-1)*3:0;d[i]=(Math.random()*2-1)*.6+c}
+  const src=AC.createBufferSource();src.buffer=buf;const bp=AC.createBiquadFilter();bp.type='bandpass';bp.Q.value=.8;bp.frequency.setValueAtTime(7000,t);bp.frequency.exponentialRampToValueAtTime(2600,t+1.4);
+  const hp=AC.createBiquadFilter();hp.type='highpass';hp.frequency.value=900;const gn=AC.createGain();gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(.9,t+.02);gn.gain.exponentialRampToValueAtTime(.25,t+.25);gn.gain.exponentialRampToValueAtTime(.001,t+1.5);
+  src.connect(bp).connect(hp).connect(gn).connect(AC.destination);src.start(t);
+  const o=AC.createOscillator(),og=AC.createGain();o.frequency.setValueAtTime(420,t);o.frequency.exponentialRampToValueAtTime(90,t+.08);og.gain.setValueAtTime(.5,t);og.gain.exponentialRampToValueAtTime(.001,t+.1);o.connect(og).connect(AC.destination);o.start(t);o.stop(t+.12)}catch(e){}}
+$('#open').addEventListener('click',()=>{fizzSound();stage.classList.remove('shake');void stage.offsetWidth;stage.classList.add('shake');
+  const r=stage.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height*.1,90);vel=9;
+  const p=document.createElement('div');p.className='pop x';p.textContent='PŠŠT!';$('#hero').appendChild(p);
+  p.style.left=(r.left+r.width/2)+'px';p.style.top=(r.top)+'px';
+  p.animate([{transform:'translate(-50%,0) scale(.2) rotate(-12deg)',opacity:0},{transform:'translate(-50%,-90%) scale(1.15) rotate(-6deg)',opacity:1,offset:.35},{transform:'translate(-50%,-160%) scale(1) rotate(4deg)',opacity:0}],{duration:1300,easing:'cubic-bezier(.2,.8,.2,1)'}).onfinish=()=>p.remove()});
+
+/* ---------- marquee driven by time + scroll velocity ---------- */
+const mq=$('#mq1');const words=FL.map(f=>f.name.toUpperCase()).concat(['PŠŠT!']);mq.innerHTML=Array(4).fill(words.map(w=>`<span>${w}</span>`).join('')).join('');
+let mqx=0,lastY=scrollY,sv=0;
+(function mloop(){const dy=scrollY-lastY;lastY=scrollY;sv+=(dy-sv)*.1;mqx-=(1.2+Math.abs(sv)*.6)*(RM?0:1);const w=mq.scrollWidth/4;if(-mqx>w)mqx+=w;mq.style.transform=`translateX(${mqx}px) skewX(${Math.max(-12,Math.min(12,-sv*.4))}deg)`;requestAnimationFrame(mloop)})();
+
+/* ---------- horizontal flavour gallery ---------- */
+const track=$('#track');
+track.innerHTML=FL.map((f,i)=>`<article class="panel" style="background:${f.bg};color:${f.ink}"><div class="bg2" style="background:${f.acc}"></div>
+  <div><span class="mono">0${i+1} / 04</span><h3 class="x">${f.name.replace(' & ',' &<br>').replace('Juodieji ','Juodieji<br>')}</h3><p>${f.note}</p>
+  <div class="buy"><span class="pr">1,80 €</span><button class="add" type="button" data-i="${i}" style="background:${f.ink};color:${f.bg}">Į krepšelį +</button></div></div>
+  <img class="can" src="${turn(f.id,0)}" alt="PŠŠT! ${f.name} skardinė"></article>`).join('');
+const hz=$('#skoniai');
+function hzScroll(){const r=hz.getBoundingClientRect(),t=hz.offsetHeight-innerHeight,p=Math.min(1,Math.max(0,-r.top/t));track.style.transform=`translateX(${-p*(track.scrollWidth-innerWidth)}px)`}
+addEventListener('scroll',()=>requestAnimationFrame(hzScroll),{passive:true});addEventListener('resize',hzScroll);hzScroll();
+
+/* ---------- facts: count up + tilt ---------- */
+new IntersectionObserver((es,o)=>es.forEach(e=>{if(!e.isIntersecting)return;o.disconnect();$$('.fact b').forEach(b=>{const to=+b.dataset.to,t0=performance.now();(function c(t){const k=Math.min(1,(t-t0)/1400),v=Math.round(to*(1-Math.pow(1-k,3)));b.textContent=v;if(k<1)requestAnimationFrame(c)})(t0)})}),{threshold:.4}).observe($('#facts'));
+$$('.fact').forEach(c=>{c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`rotateY(${x*16}deg) rotateX(${-y*16}deg) translateZ(10px)`});c.addEventListener('pointerleave',()=>c.style.transform='')});
+
+/* ---------- confetti ---------- */
+const cf=$('#confetti'),cg=cf.getContext('2d');let C=[];
+function csize(){const d=Math.min(devicePixelRatio||1,2);cf.width=innerWidth*d;cf.height=innerHeight*d;cg.setTransform(d,0,0,d,0,0)}addEventListener('resize',csize);csize();
+function confetti(x,y,cols,n=120){if(RM)return;for(let i=0;i<n;i++){const a=-Math.PI/2+(Math.random()-.5)*2.2,s=6+Math.random()*10;C.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:Math.random()*6,vr:(Math.random()-.5)*.4,w:6+Math.random()*8,h:4+Math.random()*10,c:cols[i%cols.length],l:1})}if(C.length===n)requestAnimationFrame(cloop)}
+function cloop(){cg.clearRect(0,0,innerWidth,innerHeight);for(const p of C){p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l-=.006;cg.save();cg.translate(p.x,p.y);cg.rotate(p.r);cg.globalAlpha=Math.max(0,p.l);cg.fillStyle=p.c;cg.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.r*3)));cg.restore()}
+  C=C.filter(p=>p.l>0&&p.y<innerHeight+40);if(C.length)requestAnimationFrame(cloop);else cg.clearRect(0,0,innerWidth,innerHeight)}
+
+/* ---------- cart ---------- */
+const cart={};
+function renderCart(){const n=Object.values(cart).reduce((a,b)=>a+b,0);$('#cnt').textContent=n;
+  $('#items').innerHTML=n?FL.filter(f=>cart[f.id]).map(f=>`<div class="it"><img src="${turn(f.id,0)}" alt=""><b>${f.name}</b><span>${cart[f.id]} × 1,80 €</span></div>`).join(''):'<p>Krepšelis kol kas tuščias. Atidaryk skardinę!</p>';
+  const left=24-n;$('#ship').textContent=n?(left>0?`Iki nemokamo pristatymo trūksta ${left} skard.`:'Pristatymas nemokamas!'):'';$('#checkout').textContent=n?`Apmokėti ${eur(n*PRICE)}`:'Apmokėti'}
+function addToCart(id,q,ev){cart[id]=(cart[id]||0)+q;renderCart();const b=$('#cartb');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');
+  const f=FL.find(x=>x.id===id);const x=ev&&ev.clientX||innerWidth/2,y=ev&&ev.clientY||innerHeight/2;confetti(x,y,[f.bg,f.acc,f.alt,f.ink],90)}
+document.addEventListener('click',e=>{const a=e.target.closest('.add');if(a){addToCart(FL[+a.dataset.i].id,1,e);a.textContent='Pridėta ✓';setTimeout(()=>a.textContent='Į krepšelį +',1300)}});
+const openCart=o=>{document.body.classList.toggle('cart',o);$('#drawer').setAttribute('aria-hidden',!o)};
+$('#cartb').onclick=()=>openCart(true);$('#x2').onclick=$('#scrim').onclick=()=>openCart(false);addEventListener('keydown',e=>{if(e.key==='Escape')openCart(false)});
+$('#checkout').onclick=e=>{if(!Object.keys(cart).length)return;confetti(e.clientX,e.clientY,FL.map(f=>f.bg),160);$('#checkout').textContent='Ačiū! (koncepcija – nieko neapmokėjote)'};
+renderCart();
+
+/* ---------- box builder ---------- */
+let BOX=[];const crate=$('#crate');
+$('#picks').innerHTML=FL.map((f,i)=>`<button class="pk" type="button" data-i="${i}" style="background:${f.bg}"><img src="${turn(f.id,0)}" alt=""><span>${f.name}<small>+1 į dėžę</small></span></button>`).join('');
+function renderBox(last){crate.innerHTML=[...Array(12)].map((_,k)=>{const f=BOX[k]!=null?FL[BOX[k]]:null;return `<div class="slot" style="${f?`background:${f.bg}`:''}">${f?`<img src="${turn(f.id,0)}" alt="" style="${k===last?'':'animation:none'}"><button type="button" data-k="${k}" aria-label="Išimti ${f.name}"></button>`:''}</div>`}).join('');
+  $('#prog').innerHTML=FL.map((f,i)=>`<i style="width:${BOX.filter(x=>x===i).length/12*100}%;background:${f.bg}"></i>`).join('');
+  $('#bstat').textContent=`${BOX.length} / 12`+(BOX.length===12?' · dėžė pilna!':'');$('#btot').textContent=eur(BOX.length*PRICE);$('#bgo').disabled=BOX.length!==12}
+$('#picks').addEventListener('click',e=>{const p=e.target.closest('.pk');if(!p||BOX.length>=12)return;BOX.push(+p.dataset.i);renderBox(BOX.length-1);
+  if(BOX.length===12){const r=crate.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2,FL.map(f=>f.bg),140)}});
+crate.addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;BOX.splice(+b.dataset.k,1);renderBox(-1)});
+$('#bclr').onclick=()=>{BOX=[];renderBox(-1)};
+$('#bgo').onclick=e=>{BOX.forEach(i=>cart[FL[i].id]=(cart[FL[i].id]||0)+1);renderCart();confetti(e.clientX,e.clientY,FL.map(f=>f.bg),160);BOX=[];renderBox(-1);setTimeout(()=>openCart(true),500)};
+renderBox(-1);
+
+/* ---------- hero entrance ---------- */
+$$('#word span').forEach((s,i)=>s.style.animationDelay=(i*.08)+'s');requestAnimationFrame(()=>$('#hero').classList.add('in'));
+FL.slice(1).forEach(f=>setTimeout(()=>preload(f.id),1500));
+</script>
+</body>
+</html>
