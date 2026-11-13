@@ -6,8 +6,8 @@ const KEY = "byazuolas:intro";
 
 /**
  * A 3.6 s cut through real work, ending on the wordmark, then the page.
- * No button to enter: it leaves on its own. A returning visitor in the same
- * session (or anyone who prefers reduced motion) never sees it: an inline script
+ * No button to enter: it leaves on its own. Anyone who saw it in the last 12 hours
+ * (or who prefers reduced motion) never sees it again: an inline script
  * in the layout marks <html> before paint and CSS hides the overlay, so there
  * is no flash.
  */
@@ -27,7 +27,7 @@ export function Intro() {
       if (done) return;
       done = true;
       try {
-        sessionStorage.setItem(KEY, "1");
+        localStorage.setItem(KEY, String(Date.now()));
       } catch {}
       setLeaving(true);
       root.classList.remove("locked");

@@ -41,9 +41,10 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-// Runs before paint: a visitor who already saw the intro this session (or prefers
-// reduced motion) never gets a flash of it.
-const seen = `try{if(sessionStorage.getItem("byazuolas:intro")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("seen","ready")}catch(e){}`;
+// Runs before paint: a visitor who saw the intro in the last 12 hours (in any tab, so
+// coming back from a concept site opened in a new tab) or who prefers reduced motion
+// never gets a flash of it.
+const seen = `try{var t=+localStorage.getItem("byazuolas:intro")||0;if(Date.now()-t<432e5||matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("seen","ready")}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

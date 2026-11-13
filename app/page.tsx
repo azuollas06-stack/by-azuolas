@@ -3,12 +3,16 @@ import Image from "next/image";
 import { Intro } from "@/components/intro";
 import { Motion } from "@/components/motion";
 import { Preview } from "@/components/preview";
+import { LaptopHero } from "@/components/laptop-hero";
+import { GiftPhone } from "@/components/gift-phone";
+import projD from "@/lib/laptop-d.json";
+import projM from "@/lib/laptop-m.json";
 import { BeforeAfter } from "@/components/before-after";
 import { LogoGrid } from "@/components/logo-grid";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL, concepts, logos } from "@/lib/content";
 
 const pad = (n: number) => String(n).padStart(2, "0");
-const MARQUEE = ["Svetainės", "El. parduotuvės", "Logotipai", "Reklaminis video dovanų"];
+const MARQUEE = ["Svetainės", "El. parduotuvės", "Logotipai", "Fotografija", "Reklaminis video dovanų"];
 
 export default function Home() {
   return (
@@ -22,6 +26,7 @@ export default function Home() {
         </a>
         <nav aria-label="Skiltys">
           <a href="#darbai">Darbai</a>
+          <a href="#dovana">Dovana</a>
           <a href="#logotipai">Logotipai</a>
           <a href="#apie">Apie</a>
           <a href="#paslaugos">Paslaugos</a>
@@ -32,44 +37,54 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <section className="hero">
-          <p className="eyebrow h1">
-            <span className="dot" aria-hidden="true" />
-            Nepriklausomas dizaineris · Lietuva · Priimu naujus projektus
+        <LaptopHero desktop={{ dir: "/hero/d", w: 1280, h: 800, proj: projD }} mobile={{ dir: "/hero/m", w: 720, h: 1152, proj: projM }} />
+
+        <section className="after" aria-label="Trumpai apie mane">
+          <p className="lede" data-r>
+            Esu Ąžuolas iš Palangos. Kuriu svetaines, el. parduotuves ir logotipus nuo nulio, be šablonų. Dirbu vienas,
+            todėl kalbate tiesiai su tuo, kuris daro darbą.
           </p>
-          <h1 className="h2">
-            Svetainės, kurios <em>atrodo kitaip</em> ir parduoda.
-          </h1>
-          <div className="hero-row h3">
-            <p className="lede">
-              Esu Ąžuolas. Kuriu svetaines, el. parduotuves ir logotipus nuo nulio, be šablonų. Dirbu vienas, todėl
-              kalbate tiesiai su tuo, kuris daro darbą.
-            </p>
-            <div className="hero-cta">
-              <a className="btn" href={INSTAGRAM_URL} target="_blank" rel="noreferrer">
-                Aptarti projektą
-              </a>
-              <a className="link" href="#darbai">
-                Darbai ↓
-              </a>
-            </div>
+          <div className="hero-cta" data-r>
+            <a className="btn" href={INSTAGRAM_URL} target="_blank" rel="noreferrer">
+              Aptarti projektą
+            </a>
+            <a className="link" href="#darbai">
+              Darbai ↓
+            </a>
           </div>
         </section>
 
-        <div className="reel h4">
-          <div className="reel-frame">
-            <Preview src="/prev/reel.mp4" poster="/prev/reel.webp" label="Ištraukos iš mano sukurtų svetainių" />
+        <section id="dovana" className="sec gift-sec" aria-labelledby="gh">
+          <div className="gift-text">
+            <span className="gift-k" data-r>
+              Dovana
+            </span>
+            <h2 id="gh" data-r>
+              Prie kiekvienos svetainės reklaminis video. Nemokamai.
+            </h2>
+            <p data-r>
+              Kai svetainė paruošta, sukuriu apie ją trumpą filmuką: kaip ji atrodo ir kaip veikia. Jį galite iškart
+              keltis į Instagram, TikTok ar Facebook ir pranešti, kad turite naują svetainę.
+            </p>
+            <ul className="gift-list" data-r>
+              <li>
+                <b>30–45 s</b>trumpas, kad žiūrėtų iki galo
+              </li>
+              <li>
+                <b>2 formatai</b>vertikalus telefonui ir horizontalus svetainei
+              </li>
+              <li>
+                <b>Jūsų stilius</b>muzika, spalvos ir tekstai pagal jūsų verslą
+              </li>
+            </ul>
+            <p className="gift-note" data-r>
+              Šalia pavyzdys, kurį padariau ŠILAS svetainei.
+            </p>
           </div>
-        </div>
-
-        <a className="gift" href="#paslaugos" data-r>
-          <span className="gift-k">Dovana</span>
-          <span>
-            Prie kiekvienos svetainės nemokamas reklaminis video
-            <i>horizontalus svetainei, vertikalus Instagram ir TikTok</i>
-          </span>
-          <span aria-hidden="true">→</span>
-        </a>
+          <div data-r>
+            <GiftPhone />
+          </div>
+        </section>
 
         <div className="marquee" aria-hidden="true">
           <div>
@@ -176,18 +191,26 @@ export default function Home() {
               <h2 id="ah">Apie</h2>
             </div>
             <p className="big" data-r>
-              Esu nepriklausomas dizaineris. Jokios agentūros, vadybininkų ar perdavimų: idėją, dizainą, programavimą ir
-              paleidimą darau pats.
+              Esu Ąžuolas iš Palangos. Svetainės yra mano pagrindinis darbas, bet esu ir fotografas, todėl kiekviename
+              projekte galvoju, kaip jis atrodys, ne tik kaip veiks.
+            </p>
+            <p className="about-p" data-r>
+              Mėgstu keliauti. Dirbti galiu iš bet kur, o daug idėjų parsivežu būtent iš kelionių: iš miestų iškabų,
+              kavinių meniu ir mažų parduotuvių, kurios atrodo kitaip nei visos. Esu nepriklausomas: jokios agentūros,
+              vadybininkų ar perdavimų. Idėją, dizainą, programavimą ir paleidimą darau pats.
             </p>
             <ul className="facts" data-r>
+              <li>
+                <b>Iš kur</b>Palanga. Dirbu su klientais visoje Lietuvoje ir nuotoliu.
+              </li>
+              <li>
+                <b>Fotografas</b>Tikros nuotraukos svetainei vietoj stock ar sugeneruotų.
+              </li>
               <li>
                 <b>Nuo nulio</b>Kiekvienas dizainas kuriamas jūsų verslui, ne iš šablono.
               </li>
               <li>
                 <b>Matote prieš programuojant</b>Dizainą patvirtinate, tik tada jį paverčiu svetaine.
-              </li>
-              <li>
-                <b>Video dovanų</b>Prie kiekvienos svetainės reklaminis filmukas socialiniams tinklams.
               </li>
             </ul>
           </div>
@@ -205,6 +228,10 @@ export default function Home() {
             <li data-r>
               <h3>El. parduotuvė</h3>
               <p>Shopify parduotuvė nuo nulio: prekių puslapiai, apmokėjimas, siuntimas, teisiniai puslapiai ir nuolaidų kodai.</p>
+            </li>
+            <li data-r>
+              <h3>Fotografija</h3>
+              <p>Produktų, patalpų ar komandos nuotraukos svetainei. Esu fotografas, todėl svetainėje bus tikri jūsų vaizdai.</p>
             </li>
             <li data-r>
               <h3>Logotipas ir stilius</h3>
